@@ -1,4 +1,4 @@
-const CACHE_VERSION = 'wari2026-v3';
+const CACHE_VERSION = 'wari2026-v4';
 const APP_SHELL = [
   './',
   './index.html',
@@ -12,6 +12,7 @@ const APP_SHELL = [
   './wari-points-4.js',
   './wari-points-5.js',
   './wari-points-tukaram.js',
+  './wari-points-tukaram-halts.js',
   './wari-points-satara.js',
   'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css',
   'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js'
@@ -82,7 +83,6 @@ self.addEventListener('fetch', event => {
     return;
   }
 
-  // Map tiles: use cache when already seen, but do not force huge pre-cache.
   if (url.hostname.includes('tile.openstreetmap.org')) {
     event.respondWith(staleWhileRevalidate(request));
   }
