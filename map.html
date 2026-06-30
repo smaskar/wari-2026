@@ -14,7 +14,7 @@
   <div class="topbar">
     <div class="panel">
       <div class="title">वारी सहाय्य · मदत नकाशा</div>
-      <div class="sub"><span id="count">0</span> मदत केंद्रे · halt workbook reviewed</div>
+      <div class="sub"><span id="count">0</span> मदत केंद्रे · same data as app</div>
       <div class="filter-title">पालखी</div>
       <div class="chips" id="palkhiChips">
         <button class="chip active" data-palkhi="all">दोन्ही पालख्या</button>
@@ -42,20 +42,17 @@
   <script src="./wari-points-dnyaneshwar-halts.js"></script>
   <script src="./wari-points-tukaram-halts.js"></script>
   <script src="./wari-points-satara.js"></script>
+  <script src="./wari-data.js"></script>
   <script>
-    const names={dnyaneshwar:'श्री संत ज्ञानेश्वर महाराज',tukaram:'जगद्गुरू श्री संत तुकाराम महाराज'};
-    const rawD=JSON.parse((window.WARI_POINT_CHUNKS||[]).join('')).map(x=>({p:'dnyaneshwar',type:x.type,label:x.label,place:x.place,base:x.base,vehicle:x.vehicle,mems:x.mems,call:x.call,doctor:x.doctor,pilot:x.pilot,lat:x.lat,lng:x.lng,ready:x.ready,date:x.date||'',phase:x.phase||''}));
-    const rawT=(window.WARI_TUKARAM_POINTS||[]).map(x=>({p:x.p||'tukaram',type:x.t||x.type,label:x.l||x.label,place:x.pl||x.place,base:x.b||x.base,vehicle:x.v||x.vehicle,mems:x.m||x.mems,call:x.c||x.call,doctor:x.d||x.doctor,pilot:x.pi||x.pilot,lat:x.lat,lng:x.lng,ready:x.r||x.ready,date:x.dt||x.date||'',phase:x.ph||x.phase||''}));
-    const rawHD=(window.WARI_DNYANESHWAR_HALT_POINTS||[]).map(x=>({p:x.p||'dnyaneshwar',type:x.type,label:x.label,place:x.place,base:x.base,vehicle:x.vehicle,mems:x.mems,call:x.call,doctor:x.doctor,pilot:x.pilot,lat:x.lat,lng:x.lng,ready:x.ready,date:x.date||'',phase:x.phase||''}));
-    const rawHT=(window.WARI_TUKARAM_HALT_POINTS||[]).map(x=>({p:x.p||'tukaram',type:x.type,label:x.label,place:x.place,base:x.base,vehicle:x.vehicle,mems:x.mems,call:x.call,doctor:x.doctor,pilot:x.pilot,lat:x.lat,lng:x.lng,ready:x.ready,date:x.date||'',phase:x.phase||''}));
-    const rawS=(window.WARI_SATARA_POINTS||[]).map(x=>({p:x.p||'dnyaneshwar',type:x.type,label:x.label,place:x.place,base:x.base,vehicle:x.vehicle,mems:x.mems,call:x.call,doctor:x.doctor,pilot:x.pilot,lat:x.lat,lng:x.lng,ready:x.ready,date:x.date||'',phase:x.phase||''}));
-    function oldHalt(p){return /halt|mukkam|मुक्काम|विश्रांती|arrival|rest day|route stretch/i.test([p.type,p.label,p.place,p.mems,p.phase].join(' '))}
-    const POINTS=[...rawD.filter(p=>!oldHalt(p)),...rawT.filter(p=>!oldHalt(p)),...rawHD,...rawHT,...rawS].map(p=>({palkhi:p.p||'dnyaneshwar',type:p.type||'',label:p.label||'',place:p.place||'',base:p.base||'',vehicle:p.vehicle||'',mems:p.mems||'',call:p.call||'',doctor:p.doctor||'',pilot:p.pilot||'',lat:+p.lat,lng:+p.lng,ready:p.ready||'',date:p.date||'',phase:p.phase||''})).filter(p=>isFinite(p.lat)&&isFinite(p.lng));
+    const W=window.WariData, POINTS=W.build();
     const map=L.map('map',{zoomControl:false}).setView([18.42,74.10],9);L.control.zoom({position:'bottomright'}).addTo(map);L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'&copy; OpenStreetMap'}).addTo(map);
     let layer=L.layerGroup().addTo(map),typeFilter='all',palkhiFilter='all';
-    function esc(s){return(s||'').toString().replace(/[&<>]/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[ch]))}function tel(s){return(s||'').replace(/[^0-9+]/g,'')}function isSatara(p){return /satara|lonand|tardgaon|taradgaon|phaltan|barad|khandala|dahiwadi|koregaon|sakh|girvi|rajale/i.test([p.mems,p.phase,p.place,p.base,p.label].join(' '))}function hasAmb(p){return /ambulance|102|108|रुग्णवाहिका/i.test([p.type,p.label].join(' '))||p.vehicle||p.call}function hasHealth(p){return /hospital|rural|phc|hbt|आरोग्य|ग्रामीण|उपजिल्हा/i.test([p.type,p.label,p.base].join(' '))||p.doctor}function hasHalt(p){return /halt|mukkam|मुक्काम|विश्रांती|arrival|rest day|route stretch/i.test([p.type,p.label,p.mems].join(' '))}function cls(p){return hasAmb(p)?'ambulance':hasHealth(p)?'health':hasHalt(p)?'halt':/water/i.test(p.type)?'water':'other'}function icon(p){return hasAmb(p)?'🚑':hasHalt(p)?'⛺':hasHealth(p)?'🏥':/water/i.test(p.type)?'💧':'📍'}function typeKeep(p){return typeFilter==='all'||typeFilter==='ambulance'&&hasAmb(p)||typeFilter==='health'&&hasHealth(p)||typeFilter==='halt'&&hasHalt(p)||typeFilter==='satara'&&isSatara(p)}function palkhiKeep(p){return palkhiFilter==='all'||p.palkhi===palkhiFilter}function keep(p){return palkhiKeep(p)&&typeKeep(p)}
-    function popup(p){let c=tel(p.call),rows=[];if(p.place)rows.push('<b>ठिकाण:</b> '+esc(p.place));if(p.vehicle)rows.push('<b>वाहन क्रमांक:</b> '+esc(p.vehicle));if(p.doctor)rows.push('<b>डॉक्टर/EMSO:</b> '+esc(p.doctor));if(p.pilot)rows.push('<b>पायलट/EA:</b> '+esc(p.pilot));if(p.base)rows.push('<b>बेस:</b> '+esc(p.base));if(p.date)rows.push('<b>तारीख:</b> '+esc(p.date));return `<b>${icon(p)} ${esc(p.label)}</b><br><small>${esc(names[p.palkhi]||p.palkhi)}${isSatara(p)?' · Satara':''}</small><br>${rows.join('<br>')}<br>${c?`<a href="tel:${c}">📞 फोन करा</a> · `:''}<a target="_blank" href="https://www.google.com/maps/dir/?api=1&destination=${p.lat},${p.lng}">दिशा</a>`}
-    function draw(){layer.clearLayers();let pts=POINTS.filter(keep);document.getElementById('count').textContent=pts.length;pts.forEach(p=>L.marker([p.lat,p.lng],{icon:L.divIcon({className:'',html:`<div class="pin ${cls(p)}">${icon(p)}</div>`,iconSize:[30,30],iconAnchor:[15,15]})}).bindPopup(popup(p)).addTo(layer));if(pts.length){map.fitBounds(L.latLngBounds(pts.map(p=>[p.lat,p.lng])).pad(.1));}}
+    function typeKeep(p){return typeFilter==='all'||typeFilter==='ambulance'&&W.hasAmb(p)||typeFilter==='health'&&W.hasHealth(p)||typeFilter==='halt'&&W.isHalt(p)||typeFilter==='satara'&&W.isSatara(p)}
+    function palkhiKeep(p){return palkhiFilter==='all'||p.palkhi===palkhiFilter}
+    function keep(p){return palkhiKeep(p)&&typeKeep(p)}
+    function dir(p){return`https://www.google.com/maps/dir/?api=1&destination=${p.lat},${p.lng}`}
+    function popup(p){let c=W.tel(p.call),rows=[];if(p.place)rows.push('<b>ठिकाण:</b> '+W.esc(p.place));if(p.vehicle)rows.push('<b>वाहन क्रमांक:</b> '+W.esc(p.vehicle));if(p.doctor)rows.push('<b>डॉक्टर/EMSO:</b> '+W.esc(p.doctor));if(p.pilot)rows.push('<b>पायलट/EA:</b> '+W.esc(p.pilot));if(p.base)rows.push('<b>बेस:</b> '+W.esc(p.base));if(p.date)rows.push('<b>तारीख:</b> '+W.esc(p.date));return `<b>${W.icon(p)} ${W.esc(p.label)}</b><br><small>${W.esc(W.NAMES[p.palkhi]||p.palkhi)}${W.isSatara(p)?' · Satara':''}</small><br>${rows.join('<br>')}<br>${c?`<a href="tel:${c}">📞 फोन करा</a> · `:''}<a target="_blank" href="${dir(p)}">दिशा</a>`}
+    function draw(){layer.clearLayers();let pts=POINTS.filter(keep);document.getElementById('count').textContent=pts.length;pts.forEach(p=>L.marker([p.lat,p.lng],{icon:L.divIcon({className:'',html:`<div class="pin ${W.cls(p)}">${W.icon(p)}</div>`,iconSize:[30,30],iconAnchor:[15,15]})}).bindPopup(popup(p)).addTo(layer));if(pts.length){map.fitBounds(L.latLngBounds(pts.map(p=>[p.lat,p.lng])).pad(.1));}}
     function setPalkhi(p){palkhiFilter=p||'all';document.querySelectorAll('#palkhiChips .chip').forEach(x=>x.classList.toggle('active',x.dataset.palkhi===palkhiFilter));draw()}
     function setType(f){typeFilter=f||'all';document.querySelectorAll('#typeChips .chip').forEach(x=>x.classList.toggle('active',x.dataset.filter===typeFilter));draw()}
     document.querySelectorAll('#palkhiChips .chip').forEach(b=>b.addEventListener('click',()=>setPalkhi(b.dataset.palkhi)));
