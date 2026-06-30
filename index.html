@@ -167,6 +167,32 @@
       });
     }
 
+    function installRouteBackFix(frame, doc){
+      if(!doc || !frame || !frame.contentWindow || doc.body.dataset.routeBackReady==='yes') return;
+      doc.body.dataset.routeBackReady='yes';
+      doc.addEventListener('click', function(e){
+        var btn=e.target.closest && e.target.closest('button');
+        if(!btn || !/मार्गावर परत/.test(btn.textContent||'')) return;
+        e.preventDefault();
+        e.stopPropagation();
+        if(e.stopImmediatePropagation) e.stopImmediatePropagation();
+        try{
+          var w=frame.contentWindow;
+          if(typeof w.showMappedArea==='function'){
+            w.showMappedArea();
+          }else if(typeof w.fitMappedArea==='function'){
+            w.fitMappedArea();
+          }
+          setTimeout(function(){
+            try{
+              if(typeof w.refresh==='function') w.refresh();
+              if(typeof w.fitMappedArea==='function') w.fitMappedArea();
+            }catch(err){}
+          },180);
+        }catch(err){console.warn('Unable to reset map route', err);}
+      }, true);
+    }
+
     function installCardFormatObserver(doc){
       if(!doc || !doc.body || doc.body.dataset.cardFormatReady==='yes') return;
       doc.body.dataset.cardFormatReady='yes';
@@ -195,6 +221,7 @@
           cleanAppText(doc);
           expandMapByDefault(frame, doc);
           installCardFormatObserver(doc);
+          installRouteBackFix(frame, doc);
           formatHelpCards(doc);
           var help=doc.querySelector('.helpline');
           if(!help || help.dataset.autoCloseReady==='yes') return;
@@ -215,6 +242,7 @@
         cleanAppText(doc);
         expandMapByDefault(frame, doc);
         installCardFormatObserver(doc);
+        installRouteBackFix(frame, doc);
         formatHelpCards(doc);
         var help=doc.querySelector('.helpline');
         if(help) help.open=false;
