@@ -49,10 +49,29 @@
   </main>
 
   <script>
+    function installHelplineAutoClose(frame){
+      if(!frame) return;
+      frame.addEventListener('load', function(){
+        try{
+          var doc=frame.contentDocument || frame.contentWindow.document;
+          var help=doc.querySelector('.helpline');
+          if(!help || help.dataset.autoCloseReady==='yes') return;
+          help.dataset.autoCloseReady='yes';
+          doc.addEventListener('click', function(e){
+            if(help.open && !help.contains(e.target)) help.open=false;
+          }, true);
+        }catch(e){console.warn('Unable to install auto close', e);}
+      });
+    }
+    document.querySelectorAll('iframe').forEach(function(frame){installHelplineAutoClose(frame);});
+
     function callApp(fn){
       var frame=document.getElementById('appFrame');
       if(!frame || !frame.contentWindow) return;
       try{
+        var doc=frame.contentDocument || frame.contentWindow.document;
+        var help=doc.querySelector('.helpline');
+        if(help) help.open=false;
         if(typeof frame.contentWindow[fn]==='function') frame.contentWindow[fn]();
         frame.focus();
       }catch(e){console.warn('Unable to call app function', e);}
