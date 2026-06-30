@@ -72,8 +72,31 @@
       if(doc.getElementById('wariPhoneLinkStyle')) return;
       var st=doc.createElement('style');
       st.id='wariPhoneLinkStyle';
-      st.textContent='.meta .phone-pill{display:inline-flex;align-items:center;gap:4px;margin:2px 3px;padding:3px 8px;border-radius:999px;background:#159653;color:#fff!important;text-decoration:none!important;font-weight:950;white-space:nowrap}.meta div{margin-top:3px}.meta b{color:#3a2b1d}';
+      st.textContent='.meta .phone-pill{display:inline-flex;align-items:center;justify-content:center;gap:4px;margin:0;padding:4px 9px;border-radius:999px;background:#159653;color:#fff!important;text-decoration:none!important;font-weight:950;white-space:nowrap;font-size:12px}.meta div{margin-top:3px}.meta b{color:#3a2b1d}.meta .contact-row{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:6px;align-items:center;margin-top:5px;line-height:1.25}.meta .contact-label{font-weight:950;color:#3a2b1d;white-space:nowrap}.meta .contact-name{font-weight:850;color:#4b3b2b;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.meta .contact-spacer{width:0}@media(max-width:390px){.meta .contact-row{grid-template-columns:1fr auto}.meta .contact-label{grid-column:1/-1}.meta .contact-spacer{display:none}}';
       doc.head.appendChild(st);
+    }
+
+    function escHtml(s){
+      return (s||'').toString().replace(/[&<>\"]/g,function(ch){return {'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;'}[ch]||ch;});
+    }
+
+    function makePhoneLink(num){
+      var clean=(num||'').trim();
+      return '<a class="phone-pill" href="tel:'+telHref(clean)+'">📞 '+escHtml(clean)+'</a>';
+    }
+
+    function formatContactField(label, value){
+      var phoneRe=/(?:\+?91[\s-]?)?[6-9]\d{9}|0\d{2,4}[\s-]?\d{6,8}|1800[\s-]?\d{2,4}[\s-]?\d{3,4}|155388|1075|1077|104|102/g;
+      var parts=(value||'').split(/\s*;\s*/).map(function(x){return x.trim();}).filter(Boolean);
+      if(!parts.length) return '';
+      return parts.map(function(part,idx){
+        var nums=part.match(phoneRe)||[];
+        var name=part.replace(phoneRe,'').replace(/[()]/g,'').replace(/\s+/g,' ').replace(/[,:;-]+$/,'').trim();
+        if(!name && nums.length) name='संपर्क';
+        var labelHtml=idx===0?'<span class="contact-label">'+escHtml(label)+'</span>':'<span class="contact-spacer"></span>';
+        var phoneHtml=nums.length?makePhoneLink(nums[0]):'<span></span>';
+        return '<div class="contact-row">'+labelHtml+'<span class="contact-name">'+escHtml(name)+'</span>'+phoneHtml+'</div>';
+      }).join('');
     }
 
     function linkifyHelpCardPhones(doc){
@@ -82,10 +105,17 @@
       var re=/(?:\+?91[\s-]?)?[6-9]\d{9}|0\d{2,4}[\s-]?\d{6,8}|1800[\s-]?\d{2,4}[\s-]?\d{3,4}|155388|1075|1077|104|102/g;
       doc.querySelectorAll('.card .meta div').forEach(function(el){
         if(el.dataset.phoneLinked==='yes') return;
-        if(el.innerHTML.indexOf('phone-pill')>-1){el.dataset.phoneLinked='yes';return;}
-        el.innerHTML=el.innerHTML.replace(re,function(m){
-          return '<a class="phone-pill" href="tel:'+telHref(m)+'">📞 '+m.trim()+'</a>';
-        });
+        if(el.innerHTML.indexOf('phone-pill')>-1 || el.innerHTML.indexOf('contact-row')>-1){el.dataset.phoneLinked='yes';return;}
+        var b=el.querySelector('b');
+        var label=b?b.textContent.trim():'';
+        var raw=el.textContent.replace(label,'').trim();
+        if(label && /डॉक्टर|EMSO|पायलट|EA/i.test(label) && re.test(raw)){
+          re.lastIndex=0;
+          el.innerHTML=formatContactField(label, raw);
+        }else{
+          re.lastIndex=0;
+          el.innerHTML=el.innerHTML.replace(re,function(m){return makePhoneLink(m);});
+        }
         el.dataset.phoneLinked='yes';
       });
     }
