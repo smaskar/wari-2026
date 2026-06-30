@@ -13,23 +13,23 @@
   </style>
 </head>
 <body>
-  <iframe class="mobile-frame" src="./app.html?v=osm6" title="वारी सहाय्य" allow="geolocation; clipboard-write; web-share"></iframe>
+  <iframe class="mobile-frame" src="./app.html?v=osm7" title="वारी सहाय्य" allow="geolocation; clipboard-write; web-share"></iframe>
 
   <main class="desktop-shell">
     <section class="phone-wrap">
-      <iframe id="appFrame" src="./app.html?v=osm6" title="वारी सहाय्य मोबाइल UI" allow="geolocation; clipboard-write; web-share"></iframe>
+      <iframe id="appFrame" src="./app.html?v=osm7" title="वारी सहाय्य मोबाइल UI" allow="geolocation; clipboard-write; web-share"></iframe>
     </section>
     <section class="map-wrap">
       <div class="desktop-head">
-        <h1>वारी सहाय्य · OpenStreetMap</h1>
+        <h1>वारी सहाय्य · मदत नकाशा</h1>
         <p>श्री संत ज्ञानेश्वर महाराज आणि जगद्गुरू श्री संत तुकाराम महाराज पालखी मार्गासाठी आमचे मदत केंद्र.</p>
         <div class="desk-actions">
           <button class="desk-btn" onclick="callApp('locateMe')">📍 माझ्या जवळ मदत शोधा<span>GPS वापरून जवळची मदत app मध्ये दाखवा</span></button>
-          <button class="desk-btn" onclick="callApp('openMapPanel')">🗺 नकाशा दाखवा<span>OpenStreetMap वर मदत केंद्र पाहा</span></button>
+          <button class="desk-btn" onclick="callApp('openMapPanel')">🗺 नकाशा दाखवा<span>मदत केंद्र नकाशावर पाहा</span></button>
         </div>
       </div>
       <!-- Google My Map is intentionally disabled for now. Kept for later reference: https://www.google.com/maps/d/u/0/embed?mid=1151dFIqz_htDjnDRMRnDqnJQE9JW3VQ -->
-      <iframe id="osmFrame" class="map-frame" src="./map.html?v=osm6" title="वारी सहाय्य OpenStreetMap" allow="geolocation; clipboard-write; web-share" loading="lazy"></iframe>
+      <iframe id="osmFrame" class="map-frame" src="./map.html?v=osm7" title="वारी सहाय्य मदत नकाशा" allow="geolocation; clipboard-write; web-share" loading="lazy"></iframe>
     </section>
   </main>
 
@@ -53,7 +53,7 @@
           doc.body.appendChild(sc);
           doc.body.dataset.extraWariPointsReady='yes';
         }
-        ['./wari-points-dnyaneshwar-halts.js?v=osm6','./wari-points-tukaram-halts.js?v=osm6','./wari-points-satara.js?v=osm6'].forEach(function(src){
+        ['./wari-points-dnyaneshwar-halts.js?v=osm7','./wari-points-tukaram-halts.js?v=osm7','./wari-points-satara.js?v=osm7'].forEach(function(src){
           var s=doc.createElement('script');
           s.src=src;
           s.onload=done;
@@ -93,23 +93,23 @@
       }catch(e){console.warn('Unable to call app function', e);}
     }
 
-    function forceOpenStreetMap(){
+    function forceHelpMap(){
       document.querySelectorAll('iframe').forEach(function(frame){
         var src=frame.getAttribute('src')||'';
         if(src.indexOf('google.com/maps')>-1 || src.indexOf('maps/d/u')>-1){
-          frame.setAttribute('src','./map.html?v=osm6');
-          frame.setAttribute('title','वारी सहाय्य OpenStreetMap');
+          frame.setAttribute('src','./map.html?v=osm7');
+          frame.setAttribute('title','वारी सहाय्य मदत नकाशा');
         }
       });
     }
-    forceOpenStreetMap();
-    setTimeout(forceOpenStreetMap,500);
-    setTimeout(forceOpenStreetMap,1500);
+    forceHelpMap();
+    setTimeout(forceHelpMap,500);
+    setTimeout(forceHelpMap,1500);
 
     function registerOfflineSupport(){
       if(!('serviceWorker' in navigator)) return;
       window.addEventListener('load', function(){
-        navigator.serviceWorker.register('./sw.js?v=osm6').then(function(reg){
+        navigator.serviceWorker.register('./sw.js?v=osm7').then(function(reg){
           function syncNow(){
             if(reg.update) reg.update();
             if(navigator.serviceWorker.controller){navigator.serviceWorker.controller.postMessage({type:'SYNC_NOW'});}
