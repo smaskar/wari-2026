@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="mr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>वारी सहाय्य · OpenStreetMap</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <style>
+    *{box-sizing:border-box}html,body,#map{width:100%;height:100%;margin:0}body{font-family:system-ui,'Noto Sans Devanagari',Arial,sans-serif;background:#eadfc8;color:#23160d}.topbar{position:absolute;z-index:900;top:14px;left:14px;right:14px;display:flex;gap:10px;align-items:flex-start;justify-content:space-between;pointer-events:none}.panel{pointer-events:auto;background:#fff8e8;border:1px solid #ead8bc;border-radius:18px;box-shadow:0 12px 30px #0002;padding:10px 12px;max-width:580px}.title{font-size:16px;font-weight:950;margin:0}.sub{font-size:12px;color:#6f5b44;font-weight:850;margin-top:2px}.chips{display:flex;gap:7px;flex-wrap:wrap;margin-top:8px}.chip{border:1px solid #ead8bc;background:white;border-radius:999px;padding:7px 10px;font-weight:950;font-size:12px;color:#4b3b2b;cursor:pointer}.chip.active{background:#23160d;color:white}.legend{pointer-events:auto;display:flex;gap:7px;flex-wrap:wrap;justify-content:flex-end}.legend span{background:#fff8e8;border:1px solid #ead8bc;border-radius:999px;padding:7px 10px;font-size:12px;font-weight:950;box-shadow:0 10px 20px #0001}.pin{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;color:white;border:2px solid white;box-shadow:0 2px 9px #0005;font-size:16px}.pin.ambulance{background:#e52920}.pin.health{background:#159653}.pin.halt{background:#9b5b00}.pin.water{background:#2f8fcf}.pin.other{background:#2f6fd6}.leaflet-popup-content{font-family:system-ui,'Noto Sans Devanagari',Arial,sans-serif;font-size:13px;line-height:1.35}.leaflet-popup-content b{font-weight:950}.leaflet-popup-content a{font-weight:950;color:#0b67c2;text-decoration:none}@media(max-width:700px){.topbar{display:block}.legend{margin-top:8px;justify-content:flex-start}.panel{max-width:none}.chips{overflow-x:auto;flex-wrap:nowrap}.chip{white-space:nowrap}}
+  </style>
+</head>
+<body>
+  <div id="map"></div>
+  <div class="topbar">
+    <div class="panel">
+      <div class="title">वारी सहाय्य · OpenStreetMap</div>
+      <div class="sub"><span id="count">0</span> मदत केंद्रे · Satara data पडताळणी आवश्यक</div>
+      <div class="chips">
+        <button class="chip active" data-filter="all">सर्व</button>
+        <button class="chip" data-filter="ambulance">🚑 रुग्णवाहिका</button>
+        <button class="chip" data-filter="health">🏥 आरोग्य</button>
+        <button class="chip" data-filter="halt">⛺ मुक्काम</button>
+        <button class="chip" data-filter="satara">Satara</button>
+      </div>
+    </div>
+    <div class="legend"><span>🚑 रुग्णवाहिका</span><span>🩺 डॉक्टर/PHC</span><span>🏥 रुग्णालय</span><span>⛺ मुक्काम</span></div>
+  </div>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="./wari-points-1.js"></script>
+  <script src="./wari-points-2.js"></script>
+  <script src="./wari-points-3.js"></script>
+  <script src="./wari-points-4.js"></script>
+  <script src="./wari-points-5.js"></script>
+  <script src="./wari-points-tukaram.js"></script>
+  <script src="./wari-points-satara.js"></script>
+  <script>
+    const names={dnyaneshwar:'श्री संत ज्ञानेश्वर महाराज',tukaram:'जगद्गुरू श्री संत तुकाराम महाराज'};
+    const rawD=JSON.parse((window.WARI_POINT_CHUNKS||[]).join('')).map(x=>({p:'dnyaneshwar',type:x.type,label:x.label,place:x.place,base:x.base,vehicle:x.vehicle,mems:x.mems,call:x.call,doctor:x.doctor,pilot:x.pilot,lat:x.lat,lng:x.lng,ready:x.ready,date:x.date||'',phase:x.phase||''}));
+    const rawT=(window.WARI_TUKARAM_POINTS||[]).map(x=>({p:x.p||'tukaram',type:x.t||x.type,label:x.l||x.label,place:x.pl||x.place,base:x.b||x.base,vehicle:x.v||x.vehicle,mems:x.m||x.mems,call:x.c||x.call,doctor:x.d||x.doctor,pilot:x.pi||x.pilot,lat:x.lat,lng:x.lng,ready:x.r||x.ready,date:x.dt||x.date||'',phase:x.ph||x.phase||''}));
+    const rawS=(window.WARI_SATARA_POINTS||[]).map(x=>({p:x.p||'dnyaneshwar',type:x.type,label:x.label,place:x.place,base:x.base,vehicle:x.vehicle,mems:x.mems,call:x.call,doctor:x.doctor,pilot:x.pilot,lat:x.lat,lng:x.lng,ready:x.ready,date:x.date||'',phase:x.phase||''}));
+    const POINTS=[...rawD,...rawT,...rawS].map(p=>({palkhi:p.p||'dnyaneshwar',type:p.type||'',label:p.label||'',place:p.place||'',base:p.base||'',vehicle:p.vehicle||'',mems:p.mems||'',call:p.call||'',doctor:p.doctor||'',pilot:p.pilot||'',lat:+p.lat,lng:+p.lng,ready:p.ready||'',date:p.date||'',phase:p.phase||''})).filter(p=>isFinite(p.lat)&&isFinite(p.lng));
+    const map=L.map('map',{zoomControl:false}).setView([18.42,74.10],9);L.control.zoom({position:'bottomright'}).addTo(map);L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'&copy; OpenStreetMap'}).addTo(map);
+    let layer=L.layerGroup().addTo(map),filter='all';
+    function esc(s){return(s||'').toString().replace(/[&<>]/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[ch]))}function tel(s){return(s||'').replace(/[^0-9+]/g,'')}function isSatara(p){return /satara|lonand|taradgaon|phaltan|barad|khandala|dahiwadi|koregaon|sakh|girvi|rajale/i.test([p.mems,p.phase,p.place,p.base,p.label].join(' '))}function hasAmb(p){return /ambulance|102|108|रुग्णवाहिका/i.test([p.type,p.label].join(' '))||p.vehicle||p.call}function hasHealth(p){return /hospital|rural|phc|hbt|आरोग्य|ग्रामीण|उपजिल्हा/i.test([p.type,p.label,p.base].join(' '))||p.doctor}function hasHalt(p){return /halt|mukkam|मुक्काम/i.test([p.type,p.label].join(' '))}function cls(p){return hasAmb(p)?'ambulance':hasHealth(p)?'health':hasHalt(p)?'halt':/water/i.test(p.type)?'water':'other'}function icon(p){return hasAmb(p)?'🚑':hasHalt(p)?'⛺':hasHealth(p)?'🏥':/water/i.test(p.type)?'💧':'📍'}function keep(p){return filter==='all'||filter==='ambulance'&&hasAmb(p)||filter==='health'&&hasHealth(p)||filter==='halt'&&hasHalt(p)||filter==='satara'&&isSatara(p)}
+    function popup(p){let c=tel(p.call),rows=[];if(p.place)rows.push('<b>ठिकाण:</b> '+esc(p.place));if(p.vehicle)rows.push('<b>वाहन क्रमांक:</b> '+esc(p.vehicle));if(p.doctor)rows.push('<b>डॉक्टर/EMSO:</b> '+esc(p.doctor));if(p.pilot)rows.push('<b>पायलट/EA:</b> '+esc(p.pilot));if(p.base)rows.push('<b>बेस:</b> '+esc(p.base));if(p.date)rows.push('<b>तारीख:</b> '+esc(p.date));return `<b>${icon(p)} ${esc(p.label)}</b><br><small>${esc(names[p.palkhi]||p.palkhi)}${isSatara(p)?' · Satara':''}</small><br>${rows.join('<br>')}<br>${c?`<a href="tel:${c}">📞 फोन करा</a> · `:''}<a target="_blank" href="https://www.google.com/maps/dir/?api=1&destination=${p.lat},${p.lng}">दिशा</a>`}
+    function draw(){layer.clearLayers();let pts=POINTS.filter(keep);document.getElementById('count').textContent=pts.length;pts.forEach(p=>L.marker([p.lat,p.lng],{icon:L.divIcon({className:'',html:`<div class="pin ${cls(p)}">${icon(p)}</div>`,iconSize:[30,30],iconAnchor:[15,15]})}).bindPopup(popup(p)).addTo(layer));if(pts.length){map.fitBounds(L.latLngBounds(pts.map(p=>[p.lat,p.lng])).pad(.1));}}
+    document.querySelectorAll('.chip').forEach(b=>b.addEventListener('click',()=>{filter=b.dataset.filter;document.querySelectorAll('.chip').forEach(x=>x.classList.toggle('active',x===b));draw();}));
+    draw();
+  </script>
+</body>
+</html>
