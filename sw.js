@@ -1,4 +1,4 @@
-const CACHE_VERSION = 'wari2026-v6';
+const CACHE_VERSION = 'wari2026-v8';
 const APP_SHELL = [
   './',
   './index.html',
@@ -6,6 +6,7 @@ const APP_SHELL = [
   './map.html',
   './offline.html',
   './manifest.webmanifest',
+  './wari-data.js',
   './wari-points-1.js',
   './wari-points-2.js',
   './wari-points-3.js',
@@ -21,26 +22,15 @@ const APP_SHELL = [
 
 self.addEventListener('install', event => {
   self.skipWaiting();
-  event.waitUntil(
-    caches.open(CACHE_VERSION).then(cache =>
-      Promise.allSettled(APP_SHELL.map(url => cache.add(url)))
-    )
-  );
+  event.waitUntil(caches.open(CACHE_VERSION).then(cache => Promise.allSettled(APP_SHELL.map(url => cache.add(url)))));
 });
 
 self.addEventListener('activate', event => {
-  event.waitUntil(
-    caches.keys().then(keys => Promise.all(keys.filter(k => k !== CACHE_VERSION).map(k => caches.delete(k))))
-      .then(() => self.clients.claim())
-  );
+  event.waitUntil(caches.keys().then(keys => Promise.all(keys.filter(k => k !== CACHE_VERSION).map(k => caches.delete(k)))).then(() => self.clients.claim()));
 });
 
 function isDataOrAppRequest(url) {
-  return url.pathname.endsWith('.html') ||
-    url.pathname.endsWith('.js') ||
-    url.pathname.endsWith('.css') ||
-    url.pathname.endsWith('.webmanifest') ||
-    url.pathname.includes('wari-points-');
+  return url.pathname.endsWith('.html') || url.pathname.endsWith('.js') || url.pathname.endsWith('.css') || url.pathname.endsWith('.webmanifest') || url.pathname.includes('wari-points-') || url.pathname.includes('wari-data');
 }
 
 async function staleWhileRevalidate(request) {
@@ -68,35 +58,14 @@ self.addEventListener('fetch', event => {
   const request = event.request;
   if (request.method !== 'GET') return;
   const url = new URL(request.url);
-
-  if (request.mode === 'navigate') {
-    event.respondWith(networkFirst(request));
-    return;
-  }
-
-  if (url.origin === location.origin && isDataOrAppRequest(url)) {
-    event.respondWith(staleWhileRevalidate(request));
-    return;
-  }
-
-  if (url.hostname === 'unpkg.com') {
-    event.respondWith(staleWhileRevalidate(request));
-    return;
-  }
-
-  if (url.hostname.includes('tile.openstreetmap.org')) {
-    event.respondWith(staleWhileRevalidate(request));
-  }
+  if (request.mode === 'navigate') { event.respondWith(networkFirst(request)); return; }
+  if (url.origin === location.origin && isDataOrAppRequest(url)) { event.respondWith(staleWhileRevalidate(request)); return; }
+  if (url.hostname === 'unpkg.com') { event.respondWith(staleWhileRevalidate(request)); return; }
+  if (url.hostname.includes('tile.openstreetmap.org')) event.respondWith(staleWhileRevalidate(request));
 });
 
 self.addEventListener('message', event => {
   if (event.data && event.data.type === 'SYNC_NOW') {
-    event.waitUntil(
-      caches.open(CACHE_VERSION).then(cache =>
-        Promise.allSettled(APP_SHELL.map(url => fetch(url).then(r => {
-          if (r && (r.ok || r.type === 'opaque')) return cache.put(url, r.clone());
-        })))
-      )
-    );
+    event.waitUntil(caches.open(CACHE_VERSION).then(cache => Promise.allSettled(APP_SHELL.map(url => fetch(url).then(r => { if (r && (r.ok || r.type === 'opaque')) return cache.put(url, r.clone()); })) )));
   }
 });
