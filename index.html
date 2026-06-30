@@ -13,11 +13,11 @@
   </style>
 </head>
 <body>
-  <iframe class="mobile-frame" src="./app.html?v=osm7" title="वारी सहाय्य" allow="geolocation; clipboard-write; web-share"></iframe>
+  <iframe class="mobile-frame" src="./app.html?v=osm8" title="वारी सहाय्य" allow="geolocation; clipboard-write; web-share"></iframe>
 
   <main class="desktop-shell">
     <section class="phone-wrap">
-      <iframe id="appFrame" src="./app.html?v=osm7" title="वारी सहाय्य मोबाइल UI" allow="geolocation; clipboard-write; web-share"></iframe>
+      <iframe id="appFrame" src="./app.html?v=osm8" title="वारी सहाय्य मोबाइल UI" allow="geolocation; clipboard-write; web-share"></iframe>
     </section>
     <section class="map-wrap">
       <div class="desktop-head">
@@ -29,7 +29,7 @@
         </div>
       </div>
       <!-- Google My Map is intentionally disabled for now. Kept for later reference: https://www.google.com/maps/d/u/0/embed?mid=1151dFIqz_htDjnDRMRnDqnJQE9JW3VQ -->
-      <iframe id="osmFrame" class="map-frame" src="./map.html?v=osm7" title="वारी सहाय्य मदत नकाशा" allow="geolocation; clipboard-write; web-share" loading="lazy"></iframe>
+      <iframe id="osmFrame" class="map-frame" src="./map.html?v=osm8" title="वारी सहाय्य मदत नकाशा" allow="geolocation; clipboard-write; web-share" loading="lazy"></iframe>
     </section>
   </main>
 
@@ -38,31 +38,6 @@
       var m=document.getElementById('osmFrame');
       if(m && m.contentWindow) m.contentWindow.postMessage({type:'PALKHI_FILTER',palkhi:p||'all'},'*');
     }
-
-    function injectExtraPoints(frame){
-      try{
-        var doc=frame.contentDocument || frame.contentWindow.document;
-        if(!doc || !doc.head || !doc.body || doc.body.dataset.extraWariPointsReady==='yes') return;
-        doc.body.dataset.extraWariPointsReady='loading';
-        var pending=3;
-        function done(){
-          pending--;
-          if(pending>0) return;
-          var sc=doc.createElement('script');
-          sc.textContent="(function(){try{if(window.__extraWariPointsAdded||typeof POINTS==='undefined')return;window.__extraWariPointsAdded=true;function norm(x,def){return {palkhi:x.p||def||'dnyaneshwar',type:x.type||'',label:x.label||'',place:x.place||'',base:x.base||'',vehicle:x.vehicle||'',mems:x.mems||'',call:x.call||'',doctor:x.doctor||'',pilot:x.pilot||'',lat:+x.lat,lng:+x.lng,ready:x.ready||'verify',date:x.date||'',phase:x.phase||''};}function isOldHalt(p){var s=[p.type,p.label,p.place,p.mems,p.phase].join(' ').toLowerCase();return /halt|mukkam|मुक्काम|विश्रांती|arrival|rest day|route stretch/.test(s);}var extra=[];(window.WARI_DNYANESHWAR_HALT_POINTS||[]).forEach(function(x){extra.push(norm(x,'dnyaneshwar'));});(window.WARI_TUKARAM_HALT_POINTS||[]).forEach(function(x){extra.push(norm(x,'tukaram'));});(window.WARI_SATARA_POINTS||[]).forEach(function(x){extra.push(norm(x,'dnyaneshwar'));});POINTS=POINTS.filter(function(p){return !isOldHalt(p);});POINTS.push.apply(POINTS,extra.filter(function(p){return isFinite(p.lat)&&isFinite(p.lng);}));if(typeof refresh==='function')refresh();if(typeof fitMappedArea==='function')setTimeout(fitMappedArea,150);}catch(e){console.warn('Extra Wari points add failed',e);}})();";
-          doc.body.appendChild(sc);
-          doc.body.dataset.extraWariPointsReady='yes';
-        }
-        ['./wari-points-dnyaneshwar-halts.js?v=osm7','./wari-points-tukaram-halts.js?v=osm7','./wari-points-satara.js?v=osm7'].forEach(function(src){
-          var s=doc.createElement('script');
-          s.src=src;
-          s.onload=done;
-          s.onerror=done;
-          doc.head.appendChild(s);
-        });
-      }catch(e){console.warn('Unable to inject extra Wari points', e);}
-    }
-
     function installPalkhiSync(frame){
       try{
         var doc=frame.contentDocument || frame.contentWindow.document;
@@ -74,30 +49,26 @@
         },true);
       }catch(e){console.warn('Unable to sync palkhi tabs',e);}
     }
-
     function installFrame(frame){
-      function run(){injectExtraPoints(frame);installPalkhiSync(frame);}
+      function run(){installPalkhiSync(frame);}
       frame.addEventListener('load',run);
-      setTimeout(run,400);
+      setTimeout(run,500);
       setTimeout(run,1600);
     }
     document.querySelectorAll('iframe').forEach(installFrame);
-
     function callApp(fn){
       var frame=document.getElementById('appFrame');
       if(!frame || !frame.contentWindow) return;
       try{
-        injectExtraPoints(frame);
         if(typeof frame.contentWindow[fn]==='function') frame.contentWindow[fn]();
         frame.focus();
       }catch(e){console.warn('Unable to call app function', e);}
     }
-
     function forceHelpMap(){
       document.querySelectorAll('iframe').forEach(function(frame){
         var src=frame.getAttribute('src')||'';
         if(src.indexOf('google.com/maps')>-1 || src.indexOf('maps/d/u')>-1){
-          frame.setAttribute('src','./map.html?v=osm7');
+          frame.setAttribute('src','./map.html?v=osm8');
           frame.setAttribute('title','वारी सहाय्य मदत नकाशा');
         }
       });
@@ -105,11 +76,10 @@
     forceHelpMap();
     setTimeout(forceHelpMap,500);
     setTimeout(forceHelpMap,1500);
-
     function registerOfflineSupport(){
       if(!('serviceWorker' in navigator)) return;
       window.addEventListener('load', function(){
-        navigator.serviceWorker.register('./sw.js?v=osm7').then(function(reg){
+        navigator.serviceWorker.register('./sw.js?v=osm8').then(function(reg){
           function syncNow(){
             if(reg.update) reg.update();
             if(navigator.serviceWorker.controller){navigator.serviceWorker.controller.postMessage({type:'SYNC_NOW'});}
