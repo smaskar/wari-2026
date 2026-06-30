@@ -56,9 +56,10 @@
     function draw(){layer.clearLayers();let pts=POINTS.filter(keep);document.getElementById('count').textContent=pts.length;pts.forEach(p=>L.marker([p.lat,p.lng],{icon:L.divIcon({className:'',html:`<div class="pin ${W.cls(p)}">${W.icon(p)}</div>`,iconSize:[30,30],iconAnchor:[15,15]})}).bindPopup(popup(p)).addTo(layer));if(pts.length){map.fitBounds(L.latLngBounds(pts.map(p=>[p.lat,p.lng])).pad(.1));}}
     function setPalkhi(p,fromParent){silent=!!fromParent;palkhiFilter=p||'all';document.querySelectorAll('#palkhiChips .chip').forEach(x=>x.classList.toggle('active',x.dataset.palkhi===palkhiFilter));draw();notifyParent();silent=false}
     function setType(f,fromParent){silent=!!fromParent;typeFilter=f||'all';document.querySelectorAll('#typeChips .chip').forEach(x=>x.classList.toggle('active',x.dataset.filter===typeFilter));draw();notifyParent();silent=false}
+    function resetMap(fromParent){silent=!!fromParent;palkhiFilter='all';typeFilter='all';document.querySelectorAll('#palkhiChips .chip').forEach(x=>x.classList.toggle('active',x.dataset.palkhi==='all'));document.querySelectorAll('#typeChips .chip').forEach(x=>x.classList.toggle('active',x.dataset.filter==='all'));draw();notifyParent();silent=false}
     document.querySelectorAll('#palkhiChips .chip').forEach(b=>b.addEventListener('click',()=>setPalkhi(b.dataset.palkhi,false)));
     document.querySelectorAll('#typeChips .chip').forEach(b=>b.addEventListener('click',()=>setType(b.dataset.filter,false)));
-    window.addEventListener('message',e=>{if(!e.data)return;if(e.data.type==='PALKHI_FILTER')setPalkhi(e.data.palkhi||'all',true);if(e.data.type==='TYPE_FILTER')setType(e.data.typeFilter||'all',true)});
+    window.addEventListener('message',e=>{if(!e.data)return;if(e.data.type==='PALKHI_FILTER')setPalkhi(e.data.palkhi||'all',true);if(e.data.type==='TYPE_FILTER')setType(e.data.typeFilter||'all',true);if(e.data.type==='RESET_MAP')resetMap(true)});
     draw();
   </script>
 </body>
