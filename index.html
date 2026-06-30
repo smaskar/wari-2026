@@ -7,40 +7,69 @@
   <link rel="manifest" href="./manifest.webmanifest" />
   <meta name="theme-color" content="#f27405" />
   <style>
-    :root{--orange:#f27405;--ink:#23160d;--shadow:0 22px 55px rgba(42,24,8,.18)}*{box-sizing:border-box}html,body{margin:0;width:100%;min-height:100%;background:radial-gradient(circle at top,#fff7df,#e7d7bb);font-family:system-ui,'Noto Sans Devanagari',Arial,sans-serif;color:var(--ink)}iframe{border:0;display:block}.mobile-frame{display:block;width:100%;height:100dvh;min-height:100vh}.desktop-shell{display:none}@media (min-width:900px){body{overflow:hidden}.mobile-frame{display:none}.desktop-shell{display:grid;grid-template-columns:470px 1fr;gap:22px;height:100dvh;padding:18px;max-width:1500px;margin:0 auto}.phone-wrap{height:calc(100dvh - 36px);border-radius:30px;overflow:hidden;background:#fff8e8;box-shadow:var(--shadow)}.phone-wrap iframe{width:100%;height:100%}.map-wrap{height:calc(100dvh - 36px);display:grid;grid-template-rows:auto 1fr;border-radius:30px;overflow:hidden;background:#fff8e8;box-shadow:var(--shadow)}.desktop-head{padding:18px 20px;background:linear-gradient(135deg,#f78400,#ef7000);color:white}.desktop-head h1{margin:0;font-size:26px;line-height:1.1;font-weight:950}.desktop-head p{margin:6px 0 14px;font-weight:800;opacity:.92}.desk-actions{display:grid;grid-template-columns:1fr 1fr;gap:12px}.desk-btn{border:0;border-radius:18px;background:white;color:#9a3a00;padding:15px 16px;font-weight:950;font-size:17px;text-align:left;box-shadow:0 12px 24px rgba(82,43,5,.18);cursor:pointer}.desk-btn span{display:block;font-size:12px;color:#806f5a;margin-top:3px}.map-frame{width:100%;height:100%;background:#eadfc8}}
+    :root{--orange:#f27405;--ink:#23160d;--shadow:0 22px 55px rgba(42,24,8,.18)}
+    *{box-sizing:border-box}html,body{margin:0;width:100%;min-height:100%;background:radial-gradient(circle at top,#fff7df,#e7d7bb);font-family:system-ui,'Noto Sans Devanagari',Arial,sans-serif;color:var(--ink)}iframe{border:0;display:block}.mobile-frame{display:block;width:100%;height:100dvh;min-height:100vh}.desktop-shell{display:none}
+    @media (min-width:900px){body{overflow:hidden}.mobile-frame{display:none}.desktop-shell{display:grid;grid-template-columns:470px 1fr;gap:22px;height:100dvh;padding:18px;max-width:1500px;margin:0 auto}.phone-wrap{height:calc(100dvh - 36px);border-radius:30px;overflow:hidden;background:#fff8e8;box-shadow:var(--shadow)}.phone-wrap iframe{width:100%;height:100%}.map-wrap{height:calc(100dvh - 36px);display:grid;grid-template-rows:auto 1fr;border-radius:30px;overflow:hidden;background:#fff8e8;box-shadow:var(--shadow)}.desktop-head{padding:18px 20px;background:linear-gradient(135deg,#f78400,#ef7000);color:white}.desktop-head h1{margin:0;font-size:26px;line-height:1.1;font-weight:950}.desktop-head p{margin:6px 0 14px;font-weight:800;opacity:.92}.desk-actions{display:grid;grid-template-columns:1fr 1fr;gap:12px}.desk-btn{border:0;border-radius:18px;background:white;color:#9a3a00;padding:15px 16px;font-weight:950;font-size:17px;text-align:left;box-shadow:0 12px 24px rgba(82,43,5,.18);cursor:pointer}.desk-btn span{display:block;font-size:12px;color:#806f5a;margin-top:3px}.map-frame{width:100%;height:100%;background:#eadfc8}}
   </style>
 </head>
 <body>
-  <iframe class="mobile-frame" src="./app.html" title="वारी सहाय्य" allow="geolocation; clipboard-write; web-share"></iframe>
+  <iframe class="mobile-frame" src="./app.html?v=osm3" title="वारी सहाय्य" allow="geolocation; clipboard-write; web-share"></iframe>
+
   <main class="desktop-shell">
-    <section class="phone-wrap"><iframe id="appFrame" src="./app.html" title="वारी सहाय्य मोबाइल UI" allow="geolocation; clipboard-write; web-share"></iframe></section>
-    <section class="map-wrap"><div class="desktop-head"><h1>वारी सहाय्य · OpenStreetMap</h1><p>श्री संत ज्ञानेश्वर महाराज आणि जगद्गुरू श्री संत तुकाराम महाराज पालखी मार्गासाठी आमचे मदत केंद्र.</p><div class="desk-actions"><button class="desk-btn" onclick="callApp('locateMe')">📍 माझ्या जवळ मदत शोधा<span>GPS वापरून जवळची मदत app मध्ये दाखवा</span></button><button class="desk-btn" onclick="callApp('openMapPanel')">🗺 नकाशा दाखवा<span>OpenStreetMap वर मदत केंद्र पाहा</span></button></div></div><!-- Google My Map kept for later use: <iframe class="map-frame" src="https://www.google.com/maps/d/u/0/embed?mid=1151dFIqz_htDjnDRMRnDqnJQE9JW3VQ&ll=18.41973967893517%2C74.3956&z=10" title="वारी सहाय्य मदत नकाशा" allowfullscreen loading="lazy"></iframe> --><iframe class="map-frame" src="./map.html" title="वारी सहाय्य OpenStreetMap" allow="geolocation; clipboard-write; web-share" loading="lazy"></iframe></section>
+    <section class="phone-wrap">
+      <iframe id="appFrame" src="./app.html?v=osm3" title="वारी सहाय्य मोबाइल UI" allow="geolocation; clipboard-write; web-share"></iframe>
+    </section>
+    <section class="map-wrap">
+      <div class="desktop-head">
+        <h1>वारी सहाय्य · OpenStreetMap</h1>
+        <p>श्री संत ज्ञानेश्वर महाराज आणि जगद्गुरू श्री संत तुकाराम महाराज पालखी मार्गासाठी आमचे मदत केंद्र.</p>
+        <div class="desk-actions">
+          <button class="desk-btn" onclick="callApp('locateMe')">📍 माझ्या जवळ मदत शोधा<span>GPS वापरून जवळची मदत app मध्ये दाखवा</span></button>
+          <button class="desk-btn" onclick="callApp('openMapPanel')">🗺 नकाशा दाखवा<span>OpenStreetMap वर मदत केंद्र पाहा</span></button>
+        </div>
+      </div>
+      <!-- Google My Map is intentionally disabled for now. Kept for later reference: https://www.google.com/maps/d/u/0/embed?mid=1151dFIqz_htDjnDRMRnDqnJQE9JW3VQ -->
+      <iframe id="osmFrame" class="map-frame" src="./map.html?v=osm3" title="वारी सहाय्य OpenStreetMap" allow="geolocation; clipboard-write; web-share" loading="lazy"></iframe>
+    </section>
   </main>
+
   <script>
-    function cleanAppText(doc){if(!doc||!doc.body)return;var w=doc.createTreeWalker(doc.body,NodeFilter.SHOW_TEXT),n;while(n=w.nextNode()){n.nodeValue=n.nodeValue.replace(/आमचे Google My Map support points/g,'आमचे मदत केंद्र नकाशावर पाहा').replace(/वारी सहाय्य Google My Map/g,'वारी सहाय्य मदत नकाशा').replace(/Google Map/g,'मोठा नकाशा');}}
-    function esc(s){return(s||'').toString().replace(/[&<>\"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;'}[c]||c;});}
-    function telHref(s){s=(s||'').replace(/[^0-9+]/g,'');return(s.length===10&&/^[6-9]/.test(s))?'+91'+s:s;}
-    function phoneLink(n){n=(n||'').trim();return'<a class="phone-pill" href="tel:'+telHref(n)+'">📞 '+esc(n)+'</a>';}
-    function phoneRe(){return/(?:\+?91[\s-]?)?[6-9]\d{9}|0\d{2,4}[\s-]?\d{6,8}|1800[\s-]?\d{2,4}[\s-]?\d{3,4}|155388|1075|1077|104|102/g;}
-    function cleanVehicle(t){return(t||'').replace(/\b[A-Z]{2}\s*\d{1,2}\s*[A-Z]{1,3}\s*\d{3,4}\b/ig,'').replace(/\s*[-–—|,/]+\s*$/,'').replace(/\s{2,}/g,' ').trim();}
-    function splitContacts(v){var re=phoneRe();return(v||'').split(/\s*;\s*/).map(function(x){x=x.trim();if(!x)return null;var nums=x.match(re)||[],name=x.replace(re,'').replace(/[()]/g,'').replace(/\s+/g,' ').replace(/[,:;—-]+$/,'').trim();return{name:name||'संपर्क',phone:nums[0]||'',cls:''};}).filter(Boolean);}
-    function contactSection(title,value,extra){var arr=(extra||[]).concat(splitContacts(value));if(!arr.length)return'';return'<div class="contact-section"><div class="contact-heading">'+esc(title)+'</div>'+arr.map(function(c){return'<div class="contact-line '+esc(c.cls||'')+'"><span class="contact-name">'+esc(c.name)+'</span>'+(c.phone?phoneLink(c.phone):'')+'</div>';}).join('')+'</div>';}
-    function addStyles(doc){if(doc.getElementById('wariEnhanceStyle'))return;var st=doc.createElement('style');st.id='wariEnhanceStyle';st.textContent='.card.formatted-card{padding:14px!important}.card.formatted-card .ct,.card.formatted-card .meta{display:none!important}.card.formatted-card .act{grid-template-columns:1fr 1fr!important}.card.formatted-card .act a.call{display:none!important}.formatted-title{font-size:16px;font-weight:950;line-height:1.25;color:#23160d}.formatted-vehicle{font-size:13px;font-weight:900;margin-top:8px;color:#4b3b2b}.formatted-service{margin-top:10px;padding:8px 10px;border-radius:13px;background:#f3ead8;font-size:12px;font-weight:950;color:#5a4430}.formatted-field{margin-top:8px;font-size:13px;line-height:1.35;color:#4b3b2b}.formatted-field b{color:#23160d}.contact-section{margin-top:12px}.contact-heading{font-size:13px;font-weight:950;color:#9a3a00;margin-bottom:6px}.contact-line{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;align-items:center;margin-top:6px;padding:7px 8px;border-radius:12px;background:#fff8e8;border:1px solid #f1e5d1}.contact-line.ambulance-main{background:#fff1ec;border-color:#ffd0c8}.contact-line.ambulance-main .contact-name{color:#b51d18}.contact-name{font-size:13px;font-weight:900;color:#3a2b1d;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.phone-pill{display:inline-flex;align-items:center;justify-content:center;gap:4px;padding:5px 9px;border-radius:999px;background:#159653;color:#fff!important;text-decoration:none!important;font-size:12px;font-weight:950;white-space:nowrap}@media(max-width:370px){.contact-line{grid-template-columns:1fr}.phone-pill{width:max-content}}';doc.head.appendChild(st);}
-    function serviceName(b){return !b?'':b.indexOf('तुकाराम')>-1?'जगद्गुरू श्री संत तुकाराम महाराज':b.indexOf('ज्ञानेश्वर')>-1?'श्री संत ज्ञानेश्वर महाराज':b;}
-    function ambPhone(act){var a=act&&act.querySelector('a.call'),h=a?a.getAttribute('href')||'':'';return h.replace(/^tel:/,'').replace(/^\+91(?=[6-9]\d{9}$)/,'');}
-    function formatCards(doc){if(!doc||!doc.body)return;addStyles(doc);doc.querySelectorAll('.card').forEach(function(card){if(card.dataset.prettyFormatted==='yes')return;var title=card.querySelector('.ttl'),meta=card.querySelector('.meta'),act=card.querySelector('.act');if(!title||!meta||!act)return;var c=title.cloneNode(true),badges=Array.from(c.querySelectorAll('.badge')).map(function(b){return b.textContent.trim();}).filter(Boolean);c.querySelectorAll('.badges').forEach(function(x){x.remove();});var base=cleanVehicle(c.textContent.trim().replace(/\s+/g,' ')),ico=(card.querySelector('.ico')||{}).textContent||'',kind=ico.indexOf('🚑')>-1?'रुग्णवाहिका सेवा':ico.indexOf('🏥')>-1?'रुग्णालय सेवा':ico.indexOf('🩺')>-1?'डॉक्टर / आरोग्य सेवा':ico.indexOf('⛺')>-1?'मुक्काम सेवा':'मदत केंद्र',lines={};meta.querySelectorAll('div').forEach(function(d){var b=d.querySelector('b');if(!b)return;lines[b.textContent.trim().replace(/:$/,'')]=d.textContent.replace(b.textContent,'').trim();});var service=[serviceName(badges[0]||''),badges[1]||'',badges[2]?'('+badges[2]+')':''].filter(Boolean).join(' – '),ap=ambPhone(act),extra=ap?[{name:'रुग्णवाहिका संपर्क',phone:ap,cls:'ambulance-main'}]:[],html='<div class="formatted-title">'+esc(kind+' – '+base)+'</div>';if(lines['वाहन क्रमांक'])html+='<div class="formatted-vehicle"><b>वाहन क्रमांक:</b> '+esc(lines['वाहन क्रमांक'])+'</div>';if(service)html+='<div class="formatted-service"><b>सेवा:</b> '+esc(service)+'</div>';if(lines['ठिकाण'])html+='<div class="formatted-field"><b>ठिकाण:</b> '+esc(lines['ठिकाण'])+'</div>';if(lines['बेस'])html+='<div class="formatted-field"><b>बेस:</b> '+esc(lines['बेस'])+'</div>';html+=contactSection('डॉक्टर / EMSO',lines['डॉक्टर/EMSO']||'');html+=contactSection('पायलट / EA / रुग्णवाहिका संपर्क',lines['पायलट/EA']||'',extra);if(lines['तारीख'])html+='<div class="formatted-field"><b>तारीख:</b> '+esc(lines['तारीख'])+'</div>';if(lines['टप्पा'])html+='<div class="formatted-field"><b>टप्पा:</b> '+esc(lines['टप्पा'])+'</div>';var wrap=doc.createElement('div');wrap.className='formatted-body';wrap.innerHTML=html;card.insertBefore(wrap,act);card.classList.add('formatted-card');card.dataset.prettyFormatted='yes';});}
-    function pointText(p){return[(p&&p.type)||'',(p&&p.vehicle)||'',(p&&p.call)||'',(p&&p.doctor)||''].join(' ').toLowerCase();}
-    function hasAmb(p){return /ambulance/.test(pointText(p))||!!(p&&p.vehicle)||!!(p&&p.call);}function hasDoc(p){return !!(p&&p.doctor)||/phc|hbt|doctor/.test(pointText(p));}function hasHosp(p){return /hospital|rural/.test(pointText(p));}function hasHalt(p){return /halt|mukkam/.test(pointText(p));}
-    function countContacts(v){var re=phoneRe();return(v||'').split(/\s*;\s*/).map(function(x){return x.trim();}).filter(Boolean).reduce(function(n,x){return n+((x.match(re)||[x]).length);},0);}
-    function uniqueCount(arr,fn){var s=new Set();(arr||[]).forEach(function(p){var k=fn(p);if(k)s.add(k);});return s.size;}
-    function syncCounts(frame,doc){try{var w=frame.contentWindow;if(!w||typeof w.visible!=='function')return;var all=w.visible('all')||[],suffix=((doc.getElementById('gps')||{}).textContent||'').indexOf('अंतर')>-1?' जवळ':' एकूण',set=function(id,n){var e=doc.getElementById(id);if(e)e.textContent=n+suffix;};set('countAmb',uniqueCount(all.filter(hasAmb),function(p){return p.vehicle||p.call||p.label;}));set('countDoc',all.filter(hasDoc).reduce(function(n,p){return n+(p.doctor?countContacts(p.doctor):1);},0));set('countHosp',all.filter(hasHosp).length);set('countHalt',all.filter(hasHalt).length);}catch(e){}}
-    function injectSatara(frame,doc){if(!doc||!doc.head||!doc.body||doc.body.dataset.sataraInjecting==='yes'||doc.body.dataset.sataraReady==='yes')return;doc.body.dataset.sataraInjecting='yes';function add(){try{var sc=doc.createElement('script');sc.textContent="(function(){try{if(window.__sataraPointsAdded)return;if(!window.WARI_SATARA_POINTS||typeof POINTS==='undefined')return;window.__sataraPointsAdded=true;POINTS.push.apply(POINTS,window.WARI_SATARA_POINTS.map(function(x){return {palkhi:x.p||'dnyaneshwar',type:x.type||'',label:x.label||'',place:x.place||'',base:x.base||'',vehicle:x.vehicle||'',mems:x.mems||'',call:x.call||'',doctor:x.doctor||'',pilot:x.pilot||'',lat:+x.lat,lng:+x.lng,ready:x.ready||'verify',date:x.date||'',phase:x.phase||''};}).filter(function(p){return isFinite(p.lat)&&isFinite(p.lng);}));if(typeof refresh==='function')refresh();if(typeof fitMappedArea==='function')setTimeout(fitMappedArea,200);}catch(e){console.warn('Satara data add failed',e);}})();";doc.body.appendChild(sc);doc.body.dataset.sataraReady='yes';setTimeout(function(){formatCards(doc);syncCounts(frame,doc);},250);}catch(e){console.warn('Satara add failed',e);}}var s=doc.createElement('script');s.id='sataraPointsScript';s.src='./wari-points-satara.js';s.onload=add;s.onerror=function(){doc.body.dataset.sataraInjecting='';};doc.head.appendChild(s);}
-    function expandMap(frame,doc){var p=doc&&doc.getElementById('page');if(p)p.classList.add('map-open');try{if(frame.contentWindow&&typeof frame.contentWindow.refresh==='function')frame.contentWindow.refresh();}catch(e){}}
-    function patchApp(frame,doc){var w=frame.contentWindow;if(!w||w.__wariEnhanced)return;w.__wariEnhanced=true;if(typeof w.refresh==='function'){var old=w.refresh;w.refresh=function(){var r=old.apply(w,arguments);setTimeout(function(){formatCards(doc);syncCounts(frame,doc);},90);return r;};}}
-    function installRouteBack(frame,doc){if(!doc||doc.body.dataset.routeBackReady==='yes')return;doc.body.dataset.routeBackReady='yes';doc.addEventListener('click',function(e){var b=e.target.closest&&e.target.closest('button');if(!b||!/मार्गावर परत/.test(b.textContent||''))return;e.preventDefault();e.stopPropagation();if(e.stopImmediatePropagation)e.stopImmediatePropagation();try{var w=frame.contentWindow;if(typeof w.showMappedArea==='function')w.showMappedArea();setTimeout(function(){if(typeof w.refresh==='function')w.refresh();if(typeof w.fitMappedArea==='function')w.fitMappedArea();},180);}catch(err){}},true);}
-    function installFrame(frame){function run(){try{var doc=frame.contentDocument||frame.contentWindow.document;if(!doc||!doc.body)return;cleanAppText(doc);injectSatara(frame,doc);expandMap(frame,doc);patchApp(frame,doc);installRouteBack(frame,doc);formatCards(doc);syncCounts(frame,doc);var h=doc.querySelector('.helpline');if(h&&h.dataset.autoCloseReady!=='yes'){h.dataset.autoCloseReady='yes';doc.addEventListener('click',function(e){if(h.open&&!h.contains(e.target))h.open=false;},true);}if(doc.body.dataset.obsReady!=='yes'){doc.body.dataset.obsReady='yes';var pending=false;new MutationObserver(function(){if(pending)return;pending=true;setTimeout(function(){pending=false;formatCards(doc);syncCounts(frame,doc);},100);}).observe(doc.body,{childList:true,subtree:true});}}catch(e){console.warn('Frame enhancement failed',e);}}frame.addEventListener('load',run);setTimeout(run,300);setTimeout(run,1500);}document.querySelectorAll('iframe').forEach(installFrame);
-    function callApp(fn){var frame=document.getElementById('appFrame');if(!frame||!frame.contentWindow)return;try{var doc=frame.contentDocument||frame.contentWindow.document;var h=doc.querySelector('.helpline');if(h)h.open=false;injectSatara(frame,doc);if(typeof frame.contentWindow[fn]==='function')frame.contentWindow[fn]();setTimeout(function(){cleanAppText(doc);formatCards(doc);syncCounts(frame,doc);},150);frame.focus();}catch(e){console.warn('Unable to call app function',e);}}
-    function registerOfflineSupport(){if(!('serviceWorker'in navigator))return;window.addEventListener('load',function(){navigator.serviceWorker.register('./sw.js').then(function(reg){function syncNow(){if(reg.update)reg.update();if(navigator.serviceWorker.controller)navigator.serviceWorker.controller.postMessage({type:'SYNC_NOW'});}if(navigator.onLine)syncNow();window.addEventListener('online',syncNow);}).catch(function(e){console.warn('Offline support not installed',e);});});}registerOfflineSupport();
+    function callApp(fn){
+      var frame=document.getElementById('appFrame');
+      if(!frame || !frame.contentWindow) return;
+      try{
+        if(typeof frame.contentWindow[fn]==='function') frame.contentWindow[fn]();
+        frame.focus();
+      }catch(e){console.warn('Unable to call app function', e);}
+    }
+
+    function forceOpenStreetMap(){
+      document.querySelectorAll('iframe').forEach(function(frame){
+        var src=frame.getAttribute('src')||'';
+        if(src.indexOf('google.com/maps')>-1 || src.indexOf('maps/d/u')>-1){
+          frame.setAttribute('src','./map.html?v=osm3');
+          frame.setAttribute('title','वारी सहाय्य OpenStreetMap');
+        }
+      });
+    }
+    forceOpenStreetMap();
+    setTimeout(forceOpenStreetMap,500);
+    setTimeout(forceOpenStreetMap,1500);
+
+    function registerOfflineSupport(){
+      if(!('serviceWorker' in navigator)) return;
+      window.addEventListener('load', function(){
+        navigator.serviceWorker.register('./sw.js?v=osm3').then(function(reg){
+          function syncNow(){
+            if(reg.update) reg.update();
+            if(navigator.serviceWorker.controller){navigator.serviceWorker.controller.postMessage({type:'SYNC_NOW'});}
+          }
+          if(navigator.onLine) syncNow();
+          window.addEventListener('online', syncNow);
+        }).catch(function(e){console.warn('Offline support not installed', e);});
+      });
+    }
+    registerOfflineSupport();
   </script>
 </body>
 </html>
