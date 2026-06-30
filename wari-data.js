@@ -1,0 +1,32 @@
+window.WariData=(function(){
+  const RE_PHONE=/(?:\+?91[\s-]?)?[6-9]\d{9}|0\d{2,4}[\s-]?\d{6,8}|1800[\s-]?\d{2,4}[\s-]?\d{3,4}|155388|1075|1077|104|102/g;
+  const NAMES={all:'दोन्ही पालख्या',dnyaneshwar:'श्री संत ज्ञानेश्वर महाराज',tukaram:'जगद्गुरू श्री संत तुकाराम महाराज'};
+  function norm(x,def){return{palkhi:x.p||x.palkhi||def||'dnyaneshwar',type:x.type||x.t||'',label:x.label||x.l||'',place:x.place||x.pl||'',base:x.base||x.b||'',vehicle:x.vehicle||x.v||'',mems:x.mems||x.m||'',call:x.call||x.c||'',doctor:x.doctor||x.d||'',pilot:x.pilot||x.pi||'',lat:+x.lat,lng:+x.lng,ready:x.ready||x.r||'',date:x.date||x.dt||'',phase:x.phase||x.ph||''}}
+  function txt(p){return[p.type,p.label,p.place,p.base,p.mems,p.phase].join(' ').toLowerCase()}
+  function isHalt(p){return /halt|mukkam|मुक्काम|विश्रांती|arrival|rest day|route stretch/.test(txt(p))}
+  function hasAmb(p){return /ambulance|102|108|रुग्णवाहिका/i.test([p.type,p.label,p.mems].join(' '))||/\b[A-Z]{2}\s*\d{1,2}\s*[A-Z]{1,3}\s*\d{3,4}\b/i.test(p.vehicle||'')}
+  function hasDoc(p){return !!p.doctor||/phc|hbt|doctor|emso|आरोग्य/i.test([p.type,p.label,p.base].join(' '))}
+  function hasHospital(p){return /hospital|rural|sdh|sub district|उपजिल्हा|ग्रामीण|रुग्णालय/i.test([p.type,p.label,p.base].join(' '))}
+  function hasHealth(p){return hasDoc(p)||hasHospital(p)}
+  function hasWater(p){return /water|पाणी/i.test([p.type,p.label].join(' '))}
+  function isSatara(p){return /satara|lonand|tardgaon|taradgaon|phaltan|barad|khandala|dahiwadi|koregaon|sakharwadi|girvi|rajale/i.test([p.mems,p.phase,p.place,p.base,p.label].join(' '))}
+  function cls(p){return hasAmb(p)?'ambulance':hasHealth(p)?'health':isHalt(p)?'halt':hasWater(p)?'water':'other'}
+  function icon(p){return hasAmb(p)?'🚑':isHalt(p)?'⛺':hasHospital(p)?'🏥':hasDoc(p)?'🩺':hasWater(p)?'💧':'📍'}
+  function esc(s){return(s||'').toString().replace(/[&<>]/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[ch]))}
+  function tel(s){return(s||'').replace(/[^0-9+]/g,'')}
+  function countContacts(v){return(v||'').split(/\s*;\s*/).map(x=>x.trim()).filter(Boolean).reduce((n,x)=>n+((x.match(RE_PHONE)||[x]).length),0)}
+  function uniqueCount(arr,fn){let s=new Set();arr.forEach(p=>{let k=fn(p);if(k)s.add(k)});return s.size}
+  function build(){
+    let rawD=[];try{rawD=JSON.parse((window.WARI_POINT_CHUNKS||[]).join('')).map(x=>norm(x,'dnyaneshwar'))}catch(e){rawD=[]}
+    let rawT=(window.WARI_TUKARAM_POINTS||[]).map(x=>norm(x,'tukaram'));
+    let rawHD=(window.WARI_DNYANESHWAR_HALT_POINTS||[]).map(x=>norm(x,'dnyaneshwar'));
+    let rawHT=(window.WARI_TUKARAM_HALT_POINTS||[]).map(x=>norm(x,'tukaram'));
+    let rawS=(window.WARI_SATARA_POINTS||[]).map(x=>norm(x,'dnyaneshwar'));
+    let pts=[...rawD.filter(p=>!isHalt(p)),...rawT.filter(p=>!isHalt(p)),...rawHD,...rawHT,...rawS.filter(p=>!isHalt(p))]
+      .filter(p=>isFinite(p.lat)&&isFinite(p.lng));
+    let seen=new Set();
+    pts=pts.filter(p=>{let key=[p.palkhi,p.type,p.label,p.place,p.vehicle,p.lat.toFixed(5),p.lng.toFixed(5)].join('|').toLowerCase();if(seen.has(key))return false;seen.add(key);return true});
+    return pts;
+  }
+  return{NAMES,build,isHalt,hasAmb,hasDoc,hasHospital,hasHealth,hasWater,isSatara,cls,icon,esc,tel,countContacts,uniqueCount};
+})();
