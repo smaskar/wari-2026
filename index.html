@@ -13,11 +13,11 @@
   </style>
 </head>
 <body>
-  <iframe class="mobile-frame" src="./app.html?v=osm8" title="वारी सहाय्य" allow="geolocation; clipboard-write; web-share"></iframe>
+  <iframe class="mobile-frame" src="./app.html?v=osm9" title="वारी सहाय्य" allow="geolocation; clipboard-write; web-share"></iframe>
 
   <main class="desktop-shell">
     <section class="phone-wrap">
-      <iframe id="appFrame" src="./app.html?v=osm8" title="वारी सहाय्य मोबाइल UI" allow="geolocation; clipboard-write; web-share"></iframe>
+      <iframe id="appFrame" src="./app.html?v=osm9" title="वारी सहाय्य मोबाइल UI" allow="geolocation; clipboard-write; web-share"></iframe>
     </section>
     <section class="map-wrap">
       <div class="desktop-head">
@@ -29,7 +29,7 @@
         </div>
       </div>
       <!-- Google My Map is intentionally disabled for now. Kept for later reference: https://www.google.com/maps/d/u/0/embed?mid=1151dFIqz_htDjnDRMRnDqnJQE9JW3VQ -->
-      <iframe id="osmFrame" class="map-frame" src="./map.html?v=osm8" title="वारी सहाय्य मदत नकाशा" allow="geolocation; clipboard-write; web-share" loading="lazy"></iframe>
+      <iframe id="osmFrame" class="map-frame" src="./map.html?v=osm9" title="वारी सहाय्य मदत नकाशा" allow="geolocation; clipboard-write; web-share" loading="lazy"></iframe>
     </section>
   </main>
 
@@ -37,6 +37,38 @@
     function setDesktopPalkhi(p){
       var m=document.getElementById('osmFrame');
       if(m && m.contentWindow) m.contentWindow.postMessage({type:'PALKHI_FILTER',palkhi:p||'all'},'*');
+    }
+    function backToAppMap(frame){
+      try{
+        var w=frame.contentWindow, doc=frame.contentDocument || w.document;
+        if(!w || !doc) return;
+        if(typeof w.openMapPanel==='function') w.openMapPanel();
+        if(typeof w.showMappedArea==='function') w.showMappedArea();
+        setTimeout(function(){
+          try{
+            var panel=doc.getElementById('mapPanel');
+            var map=w.map;
+            if(panel) panel.scrollIntoView({behavior:'smooth',block:'start'});
+            if(map && map.invalidateSize) map.invalidateSize(true);
+            if(typeof w.fitMappedArea==='function') w.fitMappedArea();
+          }catch(e){}
+        },120);
+      }catch(e){console.warn('Unable to go back to app map',e);}
+    }
+    function installAppButtons(frame){
+      try{
+        var doc=frame.contentDocument || frame.contentWindow.document;
+        if(!doc || !doc.body || doc.body.dataset.backMapReady==='yes') return;
+        doc.body.dataset.backMapReady='yes';
+        doc.addEventListener('click',function(e){
+          var b=e.target.closest && e.target.closest('button');
+          if(!b) return;
+          var t=(b.textContent||'').trim();
+          if(/मार्गावर परत|सर्व points|नकाशा दाखवा/.test(t)){
+            setTimeout(function(){backToAppMap(frame);},40);
+          }
+        },true);
+      }catch(e){console.warn('Unable to install back-to-map buttons',e);}
     }
     function installPalkhiSync(frame){
       try{
@@ -50,7 +82,7 @@
       }catch(e){console.warn('Unable to sync palkhi tabs',e);}
     }
     function installFrame(frame){
-      function run(){installPalkhiSync(frame);}
+      function run(){installPalkhiSync(frame);installAppButtons(frame);}
       frame.addEventListener('load',run);
       setTimeout(run,500);
       setTimeout(run,1600);
@@ -61,6 +93,7 @@
       if(!frame || !frame.contentWindow) return;
       try{
         if(typeof frame.contentWindow[fn]==='function') frame.contentWindow[fn]();
+        if(fn==='openMapPanel') setTimeout(function(){backToAppMap(frame);},80);
         frame.focus();
       }catch(e){console.warn('Unable to call app function', e);}
     }
@@ -68,7 +101,7 @@
       document.querySelectorAll('iframe').forEach(function(frame){
         var src=frame.getAttribute('src')||'';
         if(src.indexOf('google.com/maps')>-1 || src.indexOf('maps/d/u')>-1){
-          frame.setAttribute('src','./map.html?v=osm8');
+          frame.setAttribute('src','./map.html?v=osm9');
           frame.setAttribute('title','वारी सहाय्य मदत नकाशा');
         }
       });
@@ -79,7 +112,7 @@
     function registerOfflineSupport(){
       if(!('serviceWorker' in navigator)) return;
       window.addEventListener('load', function(){
-        navigator.serviceWorker.register('./sw.js?v=osm8').then(function(reg){
+        navigator.serviceWorker.register('./sw.js?v=osm9').then(function(reg){
           function syncNow(){
             if(reg.update) reg.update();
             if(navigator.serviceWorker.controller){navigator.serviceWorker.controller.postMessage({type:'SYNC_NOW'});}
