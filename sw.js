@@ -1,4 +1,4 @@
-const CACHE_VERSION = 'wari2026-v4';
+const CACHE_VERSION = 'wari2026-v5';
 const APP_SHELL = [
   './',
   './index.html',
@@ -12,6 +12,7 @@ const APP_SHELL = [
   './wari-points-4.js',
   './wari-points-5.js',
   './wari-points-tukaram.js',
+  './wari-points-dnyaneshwar-halts.js',
   './wari-points-tukaram-halts.js',
   './wari-points-satara.js',
   'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css',
