@@ -4,27 +4,37 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
   <title>वारी सहाय्य</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <style>
-    :root{--orange:#f27405;--cream:#f3ead8;--ink:#23160d;--muted:#806f5a;--line:#eee2cf;--shadow:0 22px 55px rgba(42,24,8,.18)}
+    :root{--orange:#f27405;--cream:#f3ead8;--ink:#23160d;--muted:#806f5a;--line:#eee2cf;--red:#e52920;--green:#159653;--blue:#2f6fd6;--shadow:0 22px 55px rgba(42,24,8,.18)}
     *{box-sizing:border-box}
     html,body{margin:0;width:100%;min-height:100%;background:radial-gradient(circle at top,#fff7df,#e7d7bb);font-family:system-ui,'Noto Sans Devanagari',Arial,sans-serif;color:var(--ink)}
+    button{font-family:inherit;cursor:pointer}
     iframe{border:0;display:block}
     .mobile-frame{display:block;width:100%;height:100dvh;min-height:100vh}
     .desktop-shell{display:none}
-    @media (min-width: 900px){
+    .pin{width:32px;height:32px;border-radius:50%;display:grid;place-items:center;color:white;border:2px solid white;box-shadow:0 2px 9px rgba(0,0,0,.35);font-size:17px}.pin.ambulance{background:#e52920}.pin.health{background:#159653}.pin.halt{background:#9b5b00}.pin.water{background:#2f8fcf}.pin.other{background:#2f6fd6}.userpin{background:#111827;border:3px solid white;width:22px;height:22px;border-radius:50%;box-shadow:0 0 0 7px rgba(47,111,214,.25)}
+    @media (min-width:900px){
       body{overflow:hidden}
       .mobile-frame{display:none}
       .desktop-shell{display:grid;grid-template-columns:470px 1fr;gap:22px;height:100dvh;padding:18px;max-width:1500px;margin:0 auto}
       .phone-wrap{height:calc(100dvh - 36px);border-radius:30px;overflow:hidden;background:#fff8e8;box-shadow:var(--shadow)}
       .phone-wrap iframe{width:100%;height:100%}
-      .map-wrap{height:calc(100dvh - 36px);display:grid;grid-template-rows:auto 1fr;border-radius:30px;overflow:hidden;background:#fff8e8;box-shadow:var(--shadow)}
+      .map-wrap{height:calc(100dvh - 36px);display:grid;grid-template-rows:auto auto 1fr auto;border-radius:30px;overflow:hidden;background:#fff8e8;box-shadow:var(--shadow)}
       .desktop-head{padding:18px 20px;background:linear-gradient(135deg,#f78400,#ef7000);color:white}
       .desktop-head h1{margin:0;font-size:26px;line-height:1.1;font-weight:950}
       .desktop-head p{margin:6px 0 14px;font-weight:800;opacity:.92}
       .desk-actions{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-      .desk-btn{border:0;border-radius:18px;background:white;color:#9a3a00;padding:15px 16px;font-weight:950;font-size:17px;text-align:left;box-shadow:0 12px 24px rgba(82,43,5,.18);cursor:pointer}
+      .desk-btn{border:0;border-radius:18px;background:white;color:#9a3a00;padding:15px 16px;font-weight:950;font-size:17px;text-align:left;box-shadow:0 12px 24px rgba(82,43,5,.18)}
       .desk-btn span{display:block;font-size:12px;color:#806f5a;margin-top:3px}
-      .map-frame{width:100%;height:100%;background:#eadfc8}
+      .desk-controls{display:flex;gap:8px;align-items:center;flex-wrap:wrap;padding:12px 14px;background:#fff8e8;border-bottom:1px solid var(--line)}
+      .desk-tab,.desk-filter{border:1px solid var(--line);border-radius:999px;background:#fff;color:#4c3c2a;padding:9px 12px;font-weight:950;font-size:13px;white-space:nowrap}
+      .desk-tab.active,.desk-filter.active{background:#2a2018;color:white;border-color:#2a2018}
+      .desk-search{margin-left:auto;min-width:240px;height:38px;border:1px solid var(--line);border-radius:999px;padding:0 14px;font-size:14px;font-weight:700;background:white;color:#23160d}
+      #desktopMap{width:100%;height:100%;background:#eadfc8}
+      .desktop-status{display:flex;justify-content:space-between;gap:12px;padding:10px 16px;background:#fff8e8;border-top:1px solid var(--line);font-size:13px;font-weight:850;color:var(--muted)}
+      .legend{display:flex;gap:8px;flex-wrap:wrap}.legend span{background:#fff;border:1px solid var(--line);border-radius:999px;padding:4px 8px;color:#4c3c2a;font-size:12px}
+      .popup-title{font-weight:950;font-size:14px;line-height:1.25}.popup-small{font-size:12px;color:#6b5b47;margin:3px 0}.popup-meta{font-size:13px;line-height:1.45}.popup-actions{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap}.popup-actions a{background:#f4ecd9;border-radius:10px;padding:7px 9px;text-decoration:none;font-weight:900;color:#24170c}.popup-actions a.call{background:#159653;color:white}.popup-actions a.dir{background:#2f6fd6;color:white}
     }
   </style>
 </head>
@@ -38,25 +48,63 @@
     <section class="map-wrap">
       <div class="desktop-head">
         <h1>वारी सहाय्य · मदत नकाशा</h1>
-        <p>श्री संत ज्ञानेश्वर महाराज आणि जगद्गुरू श्री संत तुकाराम महाराज पालखी मार्गासाठी मदत.</p>
+        <p>श्री संत ज्ञानेश्वर महाराज आणि जगद्गुरू श्री संत तुकाराम महाराज पालखी मार्गासाठी आमचे support points.</p>
         <div class="desk-actions">
-          <button class="desk-btn" onclick="callApp('locateMe')">📍 माझ्या जवळ मदत शोधा<span>GPS वापरून जवळची मदत दाखवा</span></button>
-          <button class="desk-btn" onclick="callApp('openMapPanel')">🗺 नकाशा दाखवा<span>सर्व मदत केंद्रे नकाशावर पाहा</span></button>
+          <button class="desk-btn" onclick="desktopLocate()">📍 माझ्या जवळ मदत शोधा<span>GPS वापरून आमचे जवळचे support points दाखवा</span></button>
+          <button class="desk-btn" onclick="desktopShowMap()">🗺 नकाशा दाखवा<span>आमचे सर्व मदत केंद्रे नकाशावर पाहा</span></button>
         </div>
       </div>
-      <iframe class="map-frame" src="https://www.google.com/maps/d/u/0/embed?mid=1tI_g2pw9S8fsQ4Wfz3kPau3dbGotSuw" title="Palakhi Route Map" allowfullscreen loading="lazy"></iframe>
+      <div class="desk-controls">
+        <button class="desk-tab active" data-p="all" onclick="setDesktopPalkhi('all')">दोन्ही</button>
+        <button class="desk-tab" data-p="dnyaneshwar" onclick="setDesktopPalkhi('dnyaneshwar')">श्री संत ज्ञानेश्वर महाराज</button>
+        <button class="desk-tab" data-p="tukaram" onclick="setDesktopPalkhi('tukaram')">जगद्गुरू श्री संत तुकाराम महाराज</button>
+        <button class="desk-filter active" data-f="all" onclick="setDesktopFilter('all')">सर्व</button>
+        <button class="desk-filter" data-f="ambulance" onclick="setDesktopFilter('ambulance')">🚑 रुग्णवाहिका</button>
+        <button class="desk-filter" data-f="doctor" onclick="setDesktopFilter('doctor')">🩺 डॉक्टर / PHC</button>
+        <button class="desk-filter" data-f="hospital" onclick="setDesktopFilter('hospital')">🏥 रुग्णालय</button>
+        <button class="desk-filter" data-f="halt" onclick="setDesktopFilter('halt')">⛺ मुक्काम</button>
+        <input id="deskSearch" class="desk-search" placeholder="ठिकाण, डॉक्टर, वाहन क्रमांक शोधा…" oninput="desktopRefresh()" />
+      </div>
+      <div id="desktopMap"></div>
+      <div class="desktop-status">
+        <span id="desktopCount">0 support points</span>
+        <div class="legend"><span>🚑 रुग्णवाहिका</span><span>🩺 डॉक्टर/PHC</span><span>🏥 रुग्णालय</span><span>⛺ मुक्काम</span></div>
+      </div>
     </section>
   </main>
 
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="./wari-points-1.js"></script>
+  <script src="./wari-points-2.js"></script>
+  <script src="./wari-points-3.js"></script>
+  <script src="./wari-points-4.js"></script>
+  <script src="./wari-points-5.js"></script>
+  <script src="./wari-points-tukaram.js"></script>
   <script>
-    function callApp(fn){
-      var frame=document.getElementById('appFrame');
-      if(!frame || !frame.contentWindow) return;
-      try{
-        if(typeof frame.contentWindow[fn]==='function') frame.contentWindow[fn]();
-        frame.focus();
-      }catch(e){console.warn('Unable to call app function', e);}
-    }
+    var properNames={all:'दोन्ही पालख्या',dnyaneshwar:'श्री संत ज्ञानेश्वर महाराज पालखी',tukaram:'जगद्गुरू श्री संत तुकाराम महाराज पालखी'};
+    var rawDnyaneshwar=JSON.parse((window.WARI_POINT_CHUNKS||[]).join('')).map(function(x){return{p:'dnyaneshwar',t:x.type,l:x.label,pl:x.place,b:x.base,v:x.vehicle,m:x.mems,c:x.call,d:x.doctor,pi:x.pilot,lat:x.lat,lng:x.lng,r:x.ready,dt:x.date||'',ph:x.phase||''};});
+    var rawTukaram=window.WARI_TUKARAM_POINTS||[];
+    var DESK_POINTS=rawDnyaneshwar.concat(rawTukaram).map(function(x){return{palkhi:x.p||'dnyaneshwar',type:x.t||'',label:x.l||'',place:x.pl||'',base:x.b||'',vehicle:x.v||'',mems:x.m||'',call:x.c||'',doctor:x.d||'',pilot:x.pi||'',lat:+x.lat,lng:+x.lng,ready:x.r||'',date:x.dt||'',phase:x.ph||''};}).filter(function(p){return isFinite(p.lat)&&isFinite(p.lng);});
+    var desktopMap=null,desktopMarkers=[],desktopUserMarker=null,desktopPalkhi='all',desktopFilter='all',desktopUserLocation=null;
+    function callApp(fn){var frame=document.getElementById('appFrame');if(!frame||!frame.contentWindow)return;try{if(typeof frame.contentWindow[fn]==='function')frame.contentWindow[fn]();frame.focus();}catch(e){}}
+    function initDesktopMap(){if(desktopMap)return;desktopMap=L.map('desktopMap',{zoomControl:true}).setView([18.41936,74.02765],10);L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'&copy; OpenStreetMap'}).addTo(desktopMap);desktopRefresh();setTimeout(fitDesktopPoints,250);}
+    function iconFor(p){var t=(p.type||'').toLowerCase();if(t.includes('ambulance'))return'🚑';if(t.includes('hospital')||t.includes('rural'))return'🏥';if(t.includes('phc')||t.includes('hbt'))return'🩺';if(t.includes('halt')||t.includes('mukkam'))return'⛺';if(t.includes('water'))return'💧';return'📍';}
+    function clsFor(p){var t=(p.type||'').toLowerCase();if(t.includes('ambulance'))return'ambulance';if(t.includes('hospital')||t.includes('phc')||t.includes('hbt')||t.includes('rural'))return'health';if(t.includes('halt')||t.includes('mukkam'))return'halt';if(t.includes('water'))return'water';return'other';}
+    function tel(s){return(s||'').replace(/[^0-9+]/g,'');}
+    function esc(s){return(s||'').toString().replace(/[&<>]/g,function(ch){return{'&':'&amp;','<':'&lt;','>':'&gt;'}[ch];});}
+    function inPalkhi(p){return desktopPalkhi==='all'||p.palkhi===desktopPalkhi;}
+    function inFilter(p){var t=(p.type||'').toLowerCase();var f=desktopFilter;return f==='all'||(f==='ambulance'&&t.includes('ambulance'))||(f==='doctor'&&(t.includes('phc')||t.includes('hbt')))||(f==='hospital'&&(t.includes('hospital')||t.includes('rural')))||(f==='halt'&&(t.includes('halt')||t.includes('mukkam')))||(f==='water'&&t.includes('water'));}
+    function inSearch(p){var input=document.getElementById('deskSearch');var q=input?input.value.trim().toLowerCase():'';if(!q)return true;return[p.label,p.type,p.place,p.base,p.vehicle,p.doctor,p.pilot,p.phase,p.date].join(' ').toLowerCase().includes(q);}
+    function visibleDesktopPoints(){return DESK_POINTS.filter(function(p){return inPalkhi(p)&&inFilter(p)&&inSearch(p);});}
+    function popupHtml(p){var c=tel(p.call);var dir='https://www.google.com/maps/dir/?api=1&destination='+p.lat+','+p.lng;var rows=[];if(p.place)rows.push('<b>ठिकाण:</b> '+esc(p.place));if(p.vehicle)rows.push('<b>वाहन क्रमांक:</b> '+esc(p.vehicle));if(p.doctor)rows.push('<b>डॉक्टर/EMSO:</b> '+esc(p.doctor));if(p.base)rows.push('<b>बेस:</b> '+esc(p.base));if(p.phase)rows.push('<b>टप्पा:</b> '+esc(p.phase));return'<div class="popup-title">'+iconFor(p)+' '+esc(p.label)+'</div><div class="popup-small">'+esc(properNames[p.palkhi]||'')+'</div><div class="popup-meta">'+rows.join('<br>')+'</div><div class="popup-actions">'+(c?'<a class="call" href="tel:'+c+'">फोन करा</a>':'')+'<a class="dir" target="_blank" href="'+dir+'">दिशा</a></div>';}
+    function drawDesktop(points){desktopMarkers.forEach(function(m){desktopMap.removeLayer(m);});desktopMarkers=[];points.forEach(function(p){var m=L.marker([p.lat,p.lng],{icon:L.divIcon({className:'',html:'<div class="pin '+clsFor(p)+'">'+iconFor(p)+'</div>',iconSize:[32,32],iconAnchor:[16,16]})}).addTo(desktopMap).bindPopup(popupHtml(p));desktopMarkers.push(m);});}
+    function desktopRefresh(){initDesktopMap();var pts=visibleDesktopPoints();drawDesktop(pts);document.getElementById('desktopCount').textContent=pts.length+' आमचे support points · '+properNames[desktopPalkhi];setTimeout(function(){desktopMap.invalidateSize(true);},100);}
+    function fitDesktopPoints(){var pts=visibleDesktopPoints();if(!desktopMap||!pts.length)return;desktopMap.fitBounds(L.latLngBounds(pts.map(function(p){return[p.lat,p.lng];})).pad(0.12));setTimeout(function(){desktopMap.invalidateSize(true);},150);}
+    function setDesktopPalkhi(p){desktopPalkhi=p;document.querySelectorAll('.desk-tab').forEach(function(b){b.classList.toggle('active',b.dataset.p===p);});desktopRefresh();fitDesktopPoints();}
+    function setDesktopFilter(f){desktopFilter=f;document.querySelectorAll('.desk-filter').forEach(function(b){b.classList.toggle('active',b.dataset.f===f);});desktopRefresh();fitDesktopPoints();}
+    function desktopShowMap(){callApp('openMapPanel');desktopFilter='all';document.getElementById('deskSearch').value='';document.querySelectorAll('.desk-filter').forEach(function(b){b.classList.toggle('active',b.dataset.f==='all');});desktopRefresh();fitDesktopPoints();}
+    function desktopLocate(){callApp('locateMe');initDesktopMap();if(!navigator.geolocation){document.getElementById('desktopCount').textContent='GPS उपलब्ध नाही';return;}navigator.geolocation.getCurrentPosition(function(pos){desktopUserLocation=[pos.coords.latitude,pos.coords.longitude];if(desktopUserMarker)desktopMap.removeLayer(desktopUserMarker);desktopUserMarker=L.marker(desktopUserLocation,{icon:L.divIcon({className:'',html:'<div class="userpin"></div>',iconSize:[22,22],iconAnchor:[11,11]})}).addTo(desktopMap).bindPopup('आपण येथे आहात').openPopup();desktopMap.setView(desktopUserLocation,16);desktopRefresh();document.getElementById('desktopCount').textContent=visibleDesktopPoints().length+' support points · GPS अचूकता '+Math.round(pos.coords.accuracy)+' मी.';},function(){document.getElementById('desktopCount').textContent='GPS मिळाले नाही. Location permission द्या.';},{enableHighAccuracy:true,timeout:15000,maximumAge:20000});}
+    if(window.matchMedia('(min-width:900px)').matches){setTimeout(initDesktopMap,100);}window.addEventListener('resize',function(){if(window.matchMedia('(min-width:900px)').matches){initDesktopMap();setTimeout(function(){desktopMap.invalidateSize(true);},150);}});
   </script>
 </body>
 </html>
