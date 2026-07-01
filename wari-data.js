@@ -3,7 +3,7 @@ window.WariData=(function(){
   const NAMES={all:'दोन्ही पालख्या',dnyaneshwar:'श्री संत ज्ञानेश्वर महाराज',tukaram:'जगद्गुरू श्री संत तुकाराम महाराज'};
   function norm(x,def){return{palkhi:x.p||x.palkhi||def||'dnyaneshwar',type:x.type||x.t||'',label:x.label||x.l||'',place:x.place||x.pl||'',base:x.base||x.b||'',vehicle:x.vehicle||x.v||'',mems:x.mems||x.m||'',call:x.call||x.c||'',doctor:x.doctor||x.d||'',pilot:x.pilot||x.pi||'',lat:+x.lat,lng:+x.lng,ready:x.ready||x.r||'',date:x.date||x.dt||'',phase:x.phase||x.ph||''}}
   function txt(p){return[p.type,p.label,p.place,p.base,p.mems,p.phase].join(' ').toLowerCase()}
-  function isHalt(p){return !hasHirkani(p)&&/halt|mukkam|मुक्काम|विश्रांती|arrival|rest day|route stretch/.test(txt(p))}
+  function isHalt(p){return /halt|mukkam|मुक्काम/i.test(p.type||'')}
   function hasAmb(p){return /ambulance|102|108|रुग्णवाहिका/i.test([p.type,p.label,p.mems].join(' '))||/\b[A-Z]{2}\s*\d{1,2}\s*[A-Z]{1,3}\s*\d{3,4}\b/i.test(p.vehicle||'')}
   function hasDoc(p){return isPHC(p)||isHBT(p)}
   function hasHospital(p){return isRuralHospital(p)||isPrivateHospital(p)}
@@ -11,7 +11,7 @@ window.WariData=(function(){
   function hasWater(p){return /water|पाणी/i.test([p.type,p.label].join(' '))}
   function hasHirkani(p){return /hirkani|हिरकणी/i.test([p.type,p.label,p.mems].join(' '))}
   function isSatara(p){return /satara|lonand|tardgaon|taradgaon|phaltan|barad|khandala|dahiwadi|koregaon|sakharwadi|girvi|rajale/i.test([p.mems,p.phase,p.place,p.base,p.label].join(' '))}
-  function isPHC(p){return p.type==='PHC'}
+  function isPHC(p){return /\bphc\b/i.test(p.type||'')}
   function isRuralHospital(p){var t=p.type||'';return /rural/i.test(t)&&/hospital/i.test(t)}
   function isHBT(p){return p.type==='HBT'}
   function isPrivateHospital(p){return p.type==='Hospital'}
@@ -35,7 +35,8 @@ window.WariData=(function(){
     let rawHT=(window.WARI_TUKARAM_HALT_POINTS||[]).map(x=>norm(x,'tukaram'));
     let rawS=(window.WARI_SATARA_POINTS||[]).map(x=>norm(x,'dnyaneshwar'));
     let rawHK=(window.WARI_HIRKANI_POINTS||[]).map(x=>norm(x,'dnyaneshwar'));
-    let pts=[...rawD.filter(p=>!isHalt(p)),...rawT.filter(p=>!isHalt(p)),...rawHD,...rawHT,...rawS.filter(p=>!isHalt(p)),...rawHK]
+    let notHaltType=p=>!/halt|mukkam|मुक्काम/i.test(p.type||'');
+    let pts=[...rawD.filter(notHaltType),...rawT.filter(notHaltType),...rawHD,...rawHT,...rawS.filter(notHaltType),...rawHK]
       .filter(p=>isFinite(p.lat)&&isFinite(p.lng));
     let seen=new Set();
     pts=pts.filter(p=>{let key=[p.palkhi,p.type,p.label,p.place,p.vehicle,p.lat.toFixed(5),p.lng.toFixed(5)].join('|').toLowerCase();if(seen.has(key))return false;seen.add(key);return true});
