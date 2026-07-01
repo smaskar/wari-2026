@@ -10,3 +10,4 @@
 .panel.collapsed .panel-body{display:none}
 .pin.hirkani{background:#e5399b}
 @media(max-width:700px){.panel{max-width:none}}
+.pop-thumb{width:100%;max-width:230px;border-radius:9px;display:block;margin:6px 0 4px}

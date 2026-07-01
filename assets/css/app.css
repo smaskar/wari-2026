@@ -9,3 +9,4 @@
 .hk-vids{display:flex;flex-wrap:wrap;gap:8px}
 .hk-vid{display:inline-flex;align-items:center;gap:6px;background:#fce4f1;color:#a01463;font-weight:800;padding:8px 12px;border-radius:11px;text-decoration:none;font-size:14px}
 .pop-vid{display:inline-block;margin-top:4px;color:#a01463;font-weight:800;text-decoration:none}
+.pop-thumb{width:100%;max-width:220px;border-radius:9px;display:block;margin:6px 0 4px}
