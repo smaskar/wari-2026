@@ -7,7 +7,7 @@ map.on('popupopen',()=>setTimeout(initLive,60));
 let routeLayer=L.layerGroup().addTo(map),layer=L.layerGroup().addTo(map),userLayer=L.layerGroup().addTo(map),typeFilter='all',docSub='all',ambSub='all',palkhiFilter='all',silent=false,userLocation=null;
 function typeKeep(p){return typeFilter==='all'||typeFilter==='ambulance'&&W.hasAmb(p)&&(ambSub==='all'||ambSub==='als'&&W.isALS(p)||ambSub==='bls'&&W.isBLS(p)||ambSub==='102'&&W.is102(p)||ambSub==='108'&&W.is108(p))||typeFilter==='health'&&W.hasHealth(p)||typeFilter==='halt'&&W.isHalt(p)||typeFilter==='hirkani'&&W.hasHirkani(p)||typeFilter==='phc'&&W.isPHC(p)||typeFilter==='ruralhospital'&&W.isRuralHospital(p)||typeFilter==='hbt'&&W.isHBT(p)||typeFilter==='privatehospital'&&W.isPrivateHospital(p)||typeFilter==='doctors'&&W.hasDoctor(p)&&(docSub==='all'||docSub==='ems'&&W.isEMS(p)||docSub==='mo'&&W.isMO(p))}
 function togglePanel(){const pn=document.getElementById('panel'),tg=document.getElementById('ptoggle'),open=pn.classList.toggle('collapsed');tg.textContent=open?'नियंत्रण ▾':'बंद करा ▴';tg.setAttribute('aria-expanded',String(!open));setTimeout(()=>map.invalidateSize(true),220)}
-function palkhiKeep(p){return palkhiFilter==='all'||p.palkhi===palkhiFilter}
+function palkhiKeep(p){return palkhiFilter==='all'||p.palkhi===palkhiFilter||p.palkhi==='both'}
 function keep(p){return palkhiKeep(p)&&typeKeep(p)}
 function dir(p){return`https://www.google.com/maps/dir/?api=1&destination=${p.lat},${p.lng}`}
 function notifyParent(){if(silent)return;try{parent.postMessage({type:'DESKTOP_MAP_FILTER',palkhi:palkhiFilter,typeFilter:typeFilter},'*')}catch(e){}}
