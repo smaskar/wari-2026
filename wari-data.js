@@ -36,8 +36,9 @@ window.WariData=(function(){
     let rawS=(window.WARI_SATARA_POINTS||[]).map(x=>norm(x,'dnyaneshwar'));
     let rawHK=(window.WARI_HIRKANI_POINTS||[]).map(x=>norm(x,'dnyaneshwar'));
     let rawPV=(window.WARI_PRIVATE_POINTS||[]).map(x=>norm(x,'dnyaneshwar'));
+    let rawICU=(window.WARI_SATARA_ICU_POINTS||[]).map(x=>norm(x,'dnyaneshwar'));
     let notHaltType=p=>!/halt|mukkam|मुक्काम/i.test(p.type||'');
-    let pts=[...rawD.filter(notHaltType),...rawT.filter(notHaltType),...rawHD,...rawHT,...rawS.filter(notHaltType),...rawHK,...rawPV]
+    let pts=[...rawD.filter(notHaltType),...rawT.filter(notHaltType),...rawHD,...rawHT,...rawS.filter(notHaltType),...rawHK,...rawPV,...rawICU]
       .filter(p=>isFinite(p.lat)&&isFinite(p.lng));
     let seen=new Set();
     pts=pts.filter(p=>{let key=[p.palkhi,p.type,p.label,p.place,p.vehicle,p.lat.toFixed(5),p.lng.toFixed(5)].join('|').toLowerCase();if(seen.has(key))return false;seen.add(key);return true});
