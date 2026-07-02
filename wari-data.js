@@ -47,8 +47,13 @@ window.WariData=(function(){
     // drop uncallable ambulance markers (no vehicle number AND no phone)
     pts=pts.filter(p=>!(/रुग्णवाहिका सेवा/.test(p.label)&&!p.vehicle&&!p.call));
     // one pin per ambulance: collapse repeated route-waypoints of the same vehicle (per palkhi)
-    let vseen=new Set();
-    pts=pts.filter(p=>{if(!hasAmb(p)||!p.vehicle)return true;let vk=p.palkhi+'|'+p.vehicle.replace(/[\s-]/g,'').toUpperCase();if(vseen.has(vk))return false;vseen.add(vk);return true});
+    let vseen=new Set(),vkeep=new Array(pts.length).fill(true);
+    pts.map((p,i)=>[p,i]).sort((a,b)=>(hasHealth(a[0])?0:1)-(hasHealth(b[0])?0:1)||a[1]-b[1]).forEach(([p,i])=>{
+      if(!hasAmb(p)||!p.vehicle)return;
+      let vk=p.palkhi+'|'+p.vehicle.replace(/[\s-]/g,'').toUpperCase();
+      if(vseen.has(vk))vkeep[i]=false;else vseen.add(vk);
+    });
+    pts=pts.filter((p,i)=>vkeep[i]);
     return pts;
   }
   return{NAMES,build,isHalt,hasAmb,hasDoc,hasHospital,hasHealth,hasWater,hasHirkani,isSatara,isPHC,isRuralHospital,isHBT,isPrivateHospital,hasDoctor,isEMS,isMO,isALS,isBLS,is102,is108,cls,icon,esc,tel,countContacts,uniqueCount};
