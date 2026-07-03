@@ -2,7 +2,7 @@ window.WariData=(function(){
   const RE_PHONE=/(?:\+?91[\s-]?)?[6-9]\d{9}|0\d{2,4}[\s-]?\d{6,8}|1800[\s-]?\d{2,4}[\s-]?\d{3,4}|155388|1075|1077|104|102/g;
   const NAMES={all:'दोन्ही पालख्या',both:'दोन्ही पालख्या',dnyaneshwar:'श्री संत ज्ञानेश्वर महाराज',tukaram:'जगद्गुरू श्री संत तुकाराम महाराज'};
   function cleanVeh(v){v=(v||'').trim();return /\d{3,4}/.test(v)?v:''}
-  function norm(x,def){return{palkhi:x.p||x.palkhi||def||'dnyaneshwar',type:x.type||x.t||'',label:x.label||x.l||'',place:x.place||x.pl||'',base:x.base||x.b||'',vehicle:cleanVeh(x.vehicle||x.v||''),mems:x.mems||x.m||'',call:x.call||x.c||'',doctor:x.doctor||x.d||'',pilot:x.pilot||x.pi||'',mo:x.mo||'',live:x.live||'',toilet:x.toilet||'',lat:+x.lat,lng:+x.lng,ready:x.ready||x.r||'',date:x.date||x.dt||'',phase:x.phase||x.ph||''}}
+  function norm(x,def){return{palkhi:x.p||x.palkhi||def||'dnyaneshwar',type:x.type||x.t||'',label:x.label||x.l||'',place:x.place||x.pl||'',base:x.base||x.b||'',vehicle:cleanVeh(x.vehicle||x.v||''),mems:x.mems||x.m||'',call:x.call||x.c||'',doctor:x.doctor||x.d||'',pilot:x.pilot||x.pi||'',mo:x.mo||'',live:x.live||'',toilet:x.toilet||'',sites:x.sites||'',lat:+x.lat,lng:+x.lng,ready:x.ready||x.r||'',date:x.date||x.dt||'',phase:x.phase||x.ph||''}}
   function txt(p){return[p.type,p.label,p.place,p.base,p.mems,p.phase].join(' ').toLowerCase()}
   function isHalt(p){return /halt|mukkam|मुक्काम/i.test(p.type||'')}
   function hasAmb(p){return /ambulance|102|108|रुग्णवाहिका/i.test([p.type,p.label,p.mems].join(' '))||/\b[A-Z]{2}\s*\d{1,2}\s*[A-Z]{1,3}\s*\d{3,4}\b/i.test(p.vehicle||'')}
@@ -38,7 +38,7 @@ window.WariData=(function(){
     if(hasHirkani(p))s.push('🤱 हिरकणी कक्ष');
     if(isHalt(p))s.push('⛺ मुक्काम');
     if(hasWater(p))s.push(/अंदाजे/.test((p.type||''))?'💧 पाणी — अंदाजे ठिकाण':'💧 पाणी टँकर');
-    if(p.toilet)s.push('🚻 शौचालये: '+p.toilet);
+    if(p.toilet)s.push('🚻 शौचालये: '+p.toilet+(p.sites?' · ठिकाणे: '+p.sites:''));
     if(p.mo)s.push('🧑‍⚕️ वैद्यकीय अधिकारी');
     return s;}
   function multi(p){return services(p).filter(x=>!/शौचालये|वैद्यकीय अधिकारी/.test(x)).length>1}
