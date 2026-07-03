@@ -17,11 +17,11 @@ window.WARI_SECRETARIES=[
   function render(){
     var sec=document.getElementById('secretaries-strip');
     if(sec) sec.innerHTML=window.WARI_SECRETARIES.map(function(o){
-      return '<div class="offcard"><b>'+o.n+'</b><small>'+o.d+'</small></div>';
+      return '<div class="offcard"><b>'+o.n+'</b><small>'+o.d.replace(', महाराष्ट्र शासन','<br>महाराष्ट्र शासन')+'</small></div>';
     }).join('');
     var el=document.getElementById('leaders-strip'); if(!el) return;
     el.innerHTML=window.WARI_DIGNITARIES.map(function(o){
-      return '<div class="ldr"><img src="'+o.img+'" alt="'+o.n+'" loading="lazy"/><div><b>'+o.n+'</b><small>'+o.d+'</small></div></div>';
+      return '<div class="ldr"><img src="'+o.img+'" alt="'+o.n+'" loading="lazy"/><div><b>'+o.n+'</b><small>'+o.d.replace(', महाराष्ट्र शासन','<br>महाराष्ट्र शासन')+'</small></div></div>';
     }).join('');
   }
   if(document.readyState!=='loading') render(); else document.addEventListener('DOMContentLoaded', render);
