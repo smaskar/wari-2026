@@ -21,7 +21,7 @@ window.WARI_SECRETARIES=[
     }).join('');
     var el=document.getElementById('leaders-strip'); if(!el) return;
     el.innerHTML=window.WARI_DIGNITARIES.map(function(o){
-      return '<div class="ldr"><img src="'+o.img+'" alt="'+o.n+'" loading="lazy"/><div><b>'+o.n+'</b><small>'+o.d.replace(', महाराष्ट्र शासन','<br>महाराष्ट्र शासन')+'</small></div></div>';
+      var dd=o.d.indexOf('सार्वजनिक आरोग्य')<0?o.d.replace(', महाराष्ट्र शासन','<br>महाराष्ट्र शासन'):o.d;return '<div class="ldr"><img src="'+o.img+'" alt="'+o.n+'" loading="lazy"/><div><b>'+o.n+'</b><small>'+dd+'</small></div></div>';
     }).join('');
   }
   if(document.readyState!=='loading') render(); else document.addEventListener('DOMContentLoaded', render);
