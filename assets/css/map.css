@@ -45,3 +45,8 @@
 .pin.approx{opacity:.55;border-style:dashed}
 
 .pin.police{background:#1a2f6e;border-color:#0f1d47}
+
+/* palkhi colors: तुकाराम = भगवा, ज्ञानेश्वर = निळा, दोन्ही = अर्धा-अर्धा */
+.pin.pal-tukaram{background:#f4711f!important;border-color:#c1560e!important}
+.pin.pal-dnyaneshwar{background:#1d5fc4!important;border-color:#123f85!important}
+.pin.pal-both{background:linear-gradient(90deg,#1d5fc4 50%,#f4711f 50%)!important;border-color:#6b4a1f!important}
