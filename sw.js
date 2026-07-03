@@ -1,4 +1,4 @@
-const CACHE_VERSION = 'wari2026-v95';
+const CACHE_VERSION = 'wari2026-v96';
 const APP_SHELL = [
   './',
   './index.html',
@@ -40,7 +40,13 @@ const APP_SHELL = [
   './wari-officials.js',
   './wari-dignitaries.js',
   './assets/img/hirkani-booth.jpg',
-  './assets/img/brand-deity.png',
+  './assets/img/brand-deity.jpg',
+  './assets/img/icon-192.png',
+  './assets/img/leaders/l1.jpg',
+  './assets/img/leaders/l2.jpg',
+  './assets/img/leaders/l3.jpg',
+  './assets/img/leaders/l4.jpg',
+  './assets/img/leaders/l5.jpg',
   'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css',
   'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js'
 ];
