@@ -33,3 +33,7 @@
 .pbtn{display:inline-block;padding:4px 10px;border-radius:8px;background:#eef1f4;color:#111;text-decoration:none;font-size:12px;font-weight:600}
 .pbtn.call{background:#0a7d2c;color:#fff}
 .pin.multi{box-shadow:0 0 0 2px #fff,0 0 0 4px #f27405}
+
+/* officials directory group headers */
+.hgrp{font-weight:700;font-size:12px;color:#7A1E1E;background:#FFF2E8;padding:6px 10px;margin:8px 0 2px;border-radius:6px}
+#officials-body .hname small{display:block;color:#667085;font-weight:400;font-size:12px}

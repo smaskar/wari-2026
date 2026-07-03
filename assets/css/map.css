@@ -30,3 +30,14 @@
 .pbtn{display:inline-block;padding:4px 10px;border-radius:8px;background:#eef1f4;color:#111;text-decoration:none;font-size:12px;font-weight:600}
 .pbtn.call{background:#0a7d2c;color:#fff}
 .pin.multi{box-shadow:0 0 0 2px #fff,0 0 0 4px #f27405}
+
+/* officials contact directory (desktop panel) */
+.officials-box{margin-top:8px;border-top:1px solid #eee;padding-top:6px}
+.officials-box summary{cursor:pointer;font-weight:700;font-size:13px;padding:4px 0;color:#7A1E1E}
+#officials-body{max-height:240px;overflow-y:auto;margin-top:4px;padding-right:4px}
+.hgrp{font-weight:700;font-size:11px;color:#7A1E1E;background:#FFF2E8;padding:4px 8px;margin:6px 0 3px;border-radius:5px}
+.hrow{display:flex;justify-content:space-between;gap:8px;padding:4px 2px;border-bottom:1px solid #f0f0f0;font-size:12px}
+.hname{flex:1;min-width:0}.hname b{font-size:12px}
+.hname small{display:block;color:#667085;font-size:11px}
+.hnum{display:flex;flex-direction:column;gap:2px;text-align:right;white-space:nowrap}
+.hnum a{color:#0a7d2c;font-weight:600;text-decoration:none;font-size:12px}
