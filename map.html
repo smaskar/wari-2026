@@ -21,7 +21,7 @@
       <div class="panel-body" id="panelBody">
         <div class="filter-title">नकाशा नियंत्रण</div>
         <div class="chips"><button class="chip loc-chip" onclick="locateMe()">📍 माझे स्थान दाखवा</button><button class="chip" onclick="resetMap(false)">🗺 सर्व points</button></div>
-        <div class="filter-title">पालखी</div>
+        <div class="filter-title">मुक्काम निवडा</div><div class="chips"><select id="mukkamSel" style="width:100%;padding:8px;border-radius:10px;border:1.5px solid #eadfce;font-size:13px" onchange="gotoMukkam(this.value)"></select></div><div class="filter-title">पालखी</div>
         <div class="chips" id="palkhiChips">
           <button class="chip active" data-palkhi="all">दोन्ही पालख्या</button>
           <button class="chip" data-palkhi="dnyaneshwar">श्री संत ज्ञानेश्वर महाराज</button>
@@ -92,6 +92,7 @@
   <script src="./wari-points-toilets.js"></script>
   <script src="./wari-points-water-filling.js"></script>
   <script src="./wari-points-amb-supplement.js"></script>
+  <script src="./wari-mukkams.js"></script>
   <script src="./wari-officials.js"></script>
   <script src="./wari-data.js"></script>
   <script src="./assets/js/map.js"></script>

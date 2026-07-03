@@ -49,4 +49,16 @@ document.querySelectorAll('#ambsubChips .chip').forEach(b=>b.addEventListener('c
 document.querySelectorAll('#watsubChips .chip').forEach(b=>b.addEventListener('click',()=>setWatSub(b.dataset.wat)));
 document.querySelectorAll('#haltsubChips .chip').forEach(b=>b.addEventListener('click',()=>setHaltSub(b.dataset.halt)));
 window.addEventListener('message',e=>{if(!e.data)return;if(e.data.type==='PALKHI_FILTER')setPalkhi(e.data.palkhi||'all',true);if(e.data.type==='TYPE_FILTER')setType(e.data.typeFilter||'all',true);if(e.data.type==='RESET_MAP')resetMap(true);if(e.data.type==='LOCATE_ME')locateMe()});
+let mkLayer=null;
+(function(){let sel=document.getElementById('mukkamSel');if(!sel||!window.WARI_MUKKAMS)return;
+let h='<option value="">— मुक्काम निवडा (सर्व मार्ग) —</option>';
+window.WARI_MUKKAMS.forEach((m,i)=>{h+='<option value="'+i+'">'+(m.pal==='tukaram'?'तुका':'ज्ञा')+' · '+(m.d?m.d+' · ':'')+m.n+'</option>'});
+sel.innerHTML=h})();
+function gotoMukkam(v){if(mkLayer){map.removeLayer(mkLayer);mkLayer=null}
+if(v===''){resetMap(false);return}
+let m=window.WARI_MUKKAMS[+v];if(!m)return;
+setPalkhi(m.pal);
+mkLayer=L.layerGroup().addTo(map);
+L.circle([m.lat,m.lng],{radius:500,color:'#d92b2b',weight:3,fillOpacity:.08}).addTo(mkLayer);
+map.setView([m.lat,m.lng],13);}
 draw();
