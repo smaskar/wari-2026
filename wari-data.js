@@ -47,9 +47,12 @@ window.WariData=(function(){
   function icon(p){return isPolice(p)?'🚔':hasHirkani(p)?'🤱':isToilet(p)?'🚻':isHalt(p)?'⛺':hasHospital(p)?'🏥':hasDoc(p)?'🩺':hasAmb(p)?'🚑':hasWater(p)?'💧':'📍'}
   function esc(s){return(s||'').toString().replace(/[&<>]/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[ch]))}
   function tel(s){return(s||'').replace(/[^0-9+]/g,'')}
+  function vehKey(v){return(v||'').toUpperCase().replace(/[^A-Z0-9]/g,'')}
+  function vehicleKeys(v){let m=(v||'').toUpperCase().match(/MH\s*-?\s*\d{1,2}\s*-?\s*[A-Z]{1,3}\s*-?\s*\d{3,4}/g)||[];return m.map(vehKey)}
   function vehicleCount(arr){let s=new Set();arr.forEach(p=>{(p.vehicle||'').toUpperCase().replace(/[\s-]/g,'').replace(/[A-Z]{2}\d{1,2}[A-Z]{1,3}\d{3,4}/g,m=>{s.add(m);return m})});return s.size}
   function countContacts(v){return(v||'').split(/\s*;\s*/).map(x=>x.trim()).filter(Boolean).reduce((n,x)=>n+((x.match(RE_PHONE)||[x]).length),0)}
   function uniqueCount(arr,fn){let s=new Set();arr.forEach(p=>{let k=fn(p);if(k)s.add(k)});return s.size}
+  function applyAmbContacts(pts){let src=window.WARI_AMB_CONTACTS_2026||[];if(!src.length)return pts;let by={};src.forEach(c=>{let k=c.key||vehKey(c.vehicle);if(k)by[k]=c});pts.forEach(p=>{let c=vehicleKeys(p.vehicle).map(k=>by[k]).find(Boolean);if(!c)return;p.doctor=c.doctor||p.doctor;p.pilot=c.pilot||p.pilot;p.call=c.call||p.call;if(c.mems)p.mems=c.mems;if(c.base){if(!p.base)p.base=c.base;else if(!p.base.includes(c.base))p.base+=' · वाहन बेस: '+c.base;}});return pts}
   function build(){
     let rawD=[];try{rawD=JSON.parse((window.WARI_POINT_CHUNKS||[]).join('')).map(x=>norm(x,'dnyaneshwar'))}catch(e){rawD=[]}
     let rawT=(window.WARI_TUKARAM_POINTS||[]).map(x=>norm(x,'tukaram'));
@@ -65,8 +68,9 @@ window.WariData=(function(){
     let rawP2=(window.WARI_PHC102_POINTS||[]).map(x=>norm(x,'dnyaneshwar'));
     let rawVS=(window.WARI_VISAVA_POINTS||[]).map(x=>norm(x,x.p||'dnyaneshwar'));
     let rawMM=(window.WARI_MYMAPS_POINTS||[]).map(x=>norm(x,x.p||'dnyaneshwar'));
+    let rawMB=(window.WARI_MEMSBOOK_POINTS||[]).map(x=>norm(x,x.p||'dnyaneshwar'));
     let notHaltType=p=>!/halt|mukkam|मुक्काम/i.test(p.type||'');
-    let pts=[...rawD.filter(notHaltType),...rawT.filter(notHaltType),...rawHD,...rawHT,...rawS.filter(notHaltType),...rawHK,...rawPV,...rawSOL,...rawW,...rawTL,...rawFP,...rawP2,...rawVS,...rawMM]
+    let pts=[...rawD.filter(notHaltType),...rawT.filter(notHaltType),...rawHD,...rawHT,...rawS.filter(notHaltType),...rawHK,...rawPV,...rawSOL,...rawW,...rawTL,...rawFP,...rawP2,...rawVS,...rawMM,...rawMB]
       .filter(p=>isFinite(p.lat)&&isFinite(p.lng));
     let seen=new Set();
     pts=pts.filter(p=>{let key=[p.palkhi,p.type,p.label,p.place,p.vehicle,p.lat.toFixed(5),p.lng.toFixed(5)].join('|').toLowerCase();if(seen.has(key))return false;seen.add(key);return true});
@@ -83,6 +87,7 @@ window.WariData=(function(){
       t.pilot=t.pilot?t.pilot+'; '+sup.d:sup.d;
       if(!/102|१०२/.test(t.mems||''))t.mems=(t.mems?t.mems+' ':'')+'102';
     });
+    applyAmbContacts(pts);
     return pts;
   }
   return{NAMES,build,isHalt,hasAmb,hasDoc,hasHospital,hasHealth,hasWater,hasHirkani,isSatara,isPHC,isRuralHospital,isHBT,isPrivateHospital,hasDoctor,isEMS,isMO,isALS,isBLS,is102,is108,cls,icon,isToilet,isPolice,isICU,isApprox,isVisava,services,multi,esc,tel,countContacts,uniqueCount,vehicleCount};

@@ -1,0 +1,62 @@
+status,vehicle,base_or_count,notes
+matched,MH 14 CL 1083,Alandi Rural Hospital,pins=1
+matched,MH 14 CL 1296,Aundh Gaon Kutir Maternity Home,pins=2
+matched,MH 14 CL 0981,Baramati Rural Hospital,pins=1
+matched,MH 14 CL 1125,Bhavani Peth Chandu Mama Sonawane Maternity Home,pins=2
+matched,MH 14 CL 1208,Bhigvan Primary Health Center,pins=2
+matched,MH 14 CL 1225,Bibvewadi Anna Bhau Sathe Auditorium,pins=1
+matched,MH 14 CL 1393,Chinchwad Mohan Nagar ESI Hospital,pins=2
+matched,MH 14 CL 1420,Chinchwad Tanaji Nagar Talera Hospital,pins=2
+matched,MH 14 CL 1297,Dehugaon Primary Health Center,pins=1
+matched,MH 14 CL 0796,Fursungi Primary Health Center,pins=3
+matched,MH 14 CL 1144,Indapur Sub District Hospital,pins=3
+matched,MH 14 CL 1373,Jejuri Rural Hospital,pins=5
+matched,MH 14 CL 1378,Kothrud Jayabai Nanasaheb Sutar Maternity Home,pins=2
+matched,MH 14 CL 1320,Kurkumbh Primary Health Center,pins=1
+matched,MH 14 CL 0818,Loni Kalbhor Primary Health Center,pins=1
+matched,MH 14 CL 1218,Magarpatta Annasaheb Magar Maternity Home,pins=1
+matched,MH 14 CL 1054,Mangalwar Peth Kamla Nehru General Hospital,pins=1
+matched,MH 14 CL 1422,Mann Primary Health Center,pins=1
+matched,MH 14 CL 1207,Mumbai-Pune Expressway - Urse (Talegaon) Toll Plaza,pins=1
+matched,MH 14 CL 1260,Nhavare Rural Hospital,pins=1
+matched,MH 14 CL 0754,Nimgaon Ketki Rural Hospital,pins=3
+matched,MH 14 CL 1372,Parvati Paytha Rajamata Jijau Maternity Hospital - Gol Dawakhana,pins=2
+matched,MH 14 CL 1379,Pimpri Jijamata Municipal Hospital (FC-2),pins=3
+matched,MH 14 CL 1143,Sadashiv Peth Matoshri Ramabai Ambedkar Maternity Home,pins=2
+matched,MH14 CL1316,Shivaji Nagar Dalvi Maternity Hospital,pins=1
+matched,MH 14 CL 0803,Shivajinagar Police Parade Ground,pins=2
+matched,MH 14 CL 1055,Shukrawar Peth Doctor Kotnis-Gadikhana PMC Dispensary,pins=2
+matched,MH 14 CL 1050,Taleghar Primary Health Center (FC-1),pins=1
+matched,MH 14 CL 1326,Wadgaonsheri Minatai Thakare,pins=1
+matched,MH 14 CL 0784,Yawat Rural Hospital,pins=1
+matched,MH 14 CL 0562,Yerwada Jail Hospital,pins=1
+not_plotted,MH 14 CL 0788,Bhosari Municipal Hospital,no exact vehicle in current app data
+not_plotted,MH 14 CL 1303,Chakan Rural Hospital,no exact vehicle in current app data
+not_plotted,MH 14 CL 1123,Dhankawadi Balaji Nagar Dhankawade Patil PMC PHC,no exact vehicle in current app data
+not_plotted,MH 14 CL 1209,Kalas PMC Dispensary,no exact vehicle in current app data
+not_plotted,MH 14 CL 0802,Khadki Sanjay Gandhi Maternity Home,no exact vehicle in current app data
+not_plotted,MH 14 CL 1205,Lohgaon Sub Centre,no exact vehicle in current app data
+not_plotted,MH 14 CL 0491,Morgaon Primary Health Center,no exact vehicle in current app data
+not_plotted,MH 14 CL 1071,New Thergaon,no exact vehicle in current app data
+not_plotted,MH 14 CL 1327,Nigdi Yamuna Nagar Maternity Home,no exact vehicle in current app data
+not_plotted,MH 14 CL 0810,Pimpri Sant Tukaram Nagar YCM Hospital,no exact vehicle in current app data
+not_plotted,MH 14 CL 1279,Sangvi Indira Gandhi Maternity Home,no exact vehicle in current app data
+not_plotted,MH 14 CL 1272,Saswad Rural Hospital,no exact vehicle in current app data
+not_plotted,MH 14 CL 1298,Shastri Nagar Damodar Raoji Galande Patil PMC Dispensary,no exact vehicle in current app data
+not_plotted,MH 14 CL 1262,Wadgaon Maval Rural Hospital,no exact vehicle in current app data
+not_plotted,MH 14 CL 0835,Wanwadi N G Shivarkar Maternity Home,no exact vehicle in current app data
+not_plotted,MH 14 CL 0431,Kikvi SC,no exact vehicle in current app data
+app_vehicle_no_new_roster,MH14CL0398,,current app has this MH14CL vehicle but new annexure does not
+app_vehicle_no_new_roster,MH14CL0428,,current app has this MH14CL vehicle but new annexure does not
+app_vehicle_no_new_roster,MH14CL0438,,current app has this MH14CL vehicle but new annexure does not
+app_vehicle_no_new_roster,MH14CL0463,,current app has this MH14CL vehicle but new annexure does not
+app_vehicle_no_new_roster,MH14CL0465,,current app has this MH14CL vehicle but new annexure does not
+app_vehicle_no_new_roster,MH14CL0698,,current app has this MH14CL vehicle but new annexure does not
+app_vehicle_no_new_roster,MH14CL0708,,current app has this MH14CL vehicle but new annexure does not
+app_vehicle_no_new_roster,MH14CL0721,,current app has this MH14CL vehicle but new annexure does not
+app_vehicle_no_new_roster,MH14CL0742,,current app has this MH14CL vehicle but new annexure does not
+app_vehicle_no_new_roster,MH14CL0785,,current app has this MH14CL vehicle but new annexure does not
+app_vehicle_no_new_roster,MH14CL0876,,current app has this MH14CL vehicle but new annexure does not
+app_vehicle_no_new_roster,MH14CL1053,,current app has this MH14CL vehicle but new annexure does not
+app_vehicle_no_new_roster,MH14CL1106,,current app has this MH14CL vehicle but new annexure does not
+app_vehicle_no_new_roster,MH14CL1271,,current app has this MH14CL vehicle but new annexure does not
