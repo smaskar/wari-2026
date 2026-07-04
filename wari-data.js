@@ -78,6 +78,8 @@ window.WariData=(function(){
       if(vseen.has(vk))vkeep[i]=false;else vseen.add(vk);
     });
     pts=pts.filter((p,i)=>vkeep[i]);
+    // merge pins with identical label+coords (e.g. two ambulances staged at one point) into one pin
+    (function(){const bykey={},out=[];pts.forEach(p=>{const k=(p.label||'')+'@'+p.lat.toFixed(5)+','+p.lng.toFixed(5);const t=bykey[k];if(t){['vehicle','doctor','pilot'].forEach(f=>{if(p[f]&&!(t[f]||'').includes(p[f]))t[f]=t[f]?t[f]+'; '+p[f]:p[f]});if(!t.call&&p.call)t.call=p.call;}else{bykey[k]=p;out.push(p)}});pts=out})();
     // attach 102-fleet vehicles/drivers to existing facility pins (exact label-prefix match)
     (window.WARI_AMB_SUPPLEMENT||[]).forEach(sup=>{
       let t=pts.find(p=>(p.label||'').indexOf(sup.m)===0);
