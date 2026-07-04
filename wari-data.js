@@ -64,14 +64,15 @@ window.WariData=(function(){
     let rawFP=(window.WARI_FILLING_POINTS||[]).map(x=>norm(x,'dnyaneshwar'));
     let rawP2=(window.WARI_PHC102_POINTS||[]).map(x=>norm(x,'dnyaneshwar'));
     let rawVS=(window.WARI_VISAVA_POINTS||[]).map(x=>norm(x,x.p||'dnyaneshwar'));
+    let rawMM=(window.WARI_MYMAPS_POINTS||[]).map(x=>norm(x,x.p||'dnyaneshwar'));
     let notHaltType=p=>!/halt|mukkam|मुक्काम/i.test(p.type||'');
-    let pts=[...rawD.filter(notHaltType),...rawT.filter(notHaltType),...rawHD,...rawHT,...rawS.filter(notHaltType),...rawHK,...rawPV,...rawSOL,...rawW,...rawTL,...rawFP,...rawP2,...rawVS]
+    let pts=[...rawD.filter(notHaltType),...rawT.filter(notHaltType),...rawHD,...rawHT,...rawS.filter(notHaltType),...rawHK,...rawPV,...rawSOL,...rawW,...rawTL,...rawFP,...rawP2,...rawVS,...rawMM]
       .filter(p=>isFinite(p.lat)&&isFinite(p.lng));
     let seen=new Set();
     pts=pts.filter(p=>{let key=[p.palkhi,p.type,p.label,p.place,p.vehicle,p.lat.toFixed(5),p.lng.toFixed(5)].join('|').toLowerCase();if(seen.has(key))return false;seen.add(key);return true});
     // field-verified 04/07: MEMS route waypoints are real deployment positions (e.g. दिवे घाट chain) —
     // keep ALL of them, incl. no-contact staging points; ambulance card counts distinct vehicles, not pins.
-    pts.forEach(p=>{if(/रुग्णवाहिका सेवा/.test(p.label)&&!p.vehicle&&!p.call&&!/अंदाजे|पडताळणी/.test(p.label))p.label+=' (तैनाती बिंदू — संपर्क विभागाकडे)';});
+    pts.forEach(p=>{if(/रुग्णवाहिका सेवा/.test(p.label)&&!p.vehicle&&!p.call&&!/अंदाजे|पडताळणी|तैनाती/.test(p.label))p.label+=' (तैनाती बिंदू — संपर्क विभागाकडे)';});
     // merge pins with identical label+coords (e.g. two ambulances staged at one point) into one pin
     (function(){const bykey={},out=[];pts.forEach(p=>{const k=(p.label||'')+'@'+p.lat.toFixed(5)+','+p.lng.toFixed(5);const t=bykey[k];if(t){['vehicle','doctor','pilot'].forEach(f=>{if(p[f]&&!(t[f]||'').includes(p[f]))t[f]=t[f]?t[f]+'; '+p[f]:p[f]});if(!t.call&&p.call)t.call=p.call;}else{bykey[k]=p;out.push(p)}});pts=out})();
     // attach 102-fleet vehicles/drivers to existing facility pins (exact label-prefix match)
