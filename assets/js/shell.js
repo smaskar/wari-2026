@@ -4,12 +4,12 @@ function setDesktopType(t){postToDesktopMap({type:'TYPE_FILTER',typeFilter:t||'a
 function showDesktopMap(){postToDesktopMap({type:'RESET_MAP'});var m=document.getElementById('osmFrame');if(m)m.focus();}
 function locateDesktopMap(){postToDesktopMap({type:'LOCATE_ME'});var m=document.getElementById('osmFrame');if(m)m.focus();}
 function locateBothMaps(){callApp('locateMe');setTimeout(locateDesktopMap,200);}
-function backToAppMap(frame){
+function backToAppMap(frame, keepFilter){
   try{
     var w=frame.contentWindow, doc=frame.contentDocument || w.document;
     if(!w || !doc) return;
     if(typeof w.openMapPanel==='function') w.openMapPanel();
-    if(typeof w.showMappedArea==='function') w.showMappedArea();
+    if(!keepFilter && typeof w.showMappedArea==='function') w.showMappedArea();
     setTimeout(function(){
       try{
         var panel=doc.getElementById('mapPanel');
@@ -28,16 +28,13 @@ function applyDesktopFilterToApp(data){
     var w=frame.contentWindow;
     if(data.palkhi && typeof w.setPalkhi==='function') w.setPalkhi(data.palkhi);
     var t=data.typeFilter||'all';
+    if(t==='health') t='doc';
     if(t==='all' || t==='satara'){
       if(typeof w.showMappedArea==='function') w.showMappedArea();
-    }else if(t==='ambulance' && typeof w.chooseHelp==='function'){
-      w.chooseHelp('ambulance');
-    }else if(t==='health' && typeof w.chooseHelp==='function'){
-      w.chooseHelp('hospital');
-    }else if(t==='halt' && typeof w.chooseHelp==='function'){
-      w.chooseHelp('halt');
+    }else if(/^(ambulance|doc|water|toilet|hirkani|halt)$/.test(t) && typeof w.chooseHelp==='function'){
+      w.chooseHelp(t);
     }
-    setTimeout(function(){backToAppMap(frame);},80);
+    setTimeout(function(){backToAppMap(frame,true);},80);
   }catch(e){console.warn('Unable to apply desktop filter to app',e);}
 }
 window.addEventListener('message',function(e){
@@ -57,7 +54,8 @@ function installAppButtons(frame){
         setTimeout(function(){backToAppMap(frame);},40);
       }
       if(b.dataset && b.dataset.cat){
-        var mapType=b.dataset.cat==='doctor'||b.dataset.cat==='hospital'?'health':b.dataset.cat;
+        var cat=b.dataset.cat;
+        var mapType=cat==='near'?'all':cat==='doctor'||cat==='hospital'?'doc':cat;
         setDesktopType(mapType);
       }
     },true);

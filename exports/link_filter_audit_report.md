@@ -12,8 +12,11 @@ Scope: current local repo state after My Maps + MEMS roster merge.
 - Missing service worker cache entries: 0.
 - External Leaflet CDN links checked with `curl -I`: both returned HTTP 200.
 - Local server smoke check: `app.html` returned HTTP 200.
-- Data build status: 579 points, 87 distinct ambulance vehicles, 120 ambulance pins.
+- Post-fix data build status: 596 points, 89 distinct ambulance vehicles, 120 ambulance pins.
 - New MEMS roster contact file is loaded by both `app.html` and `map.html`.
+- Fix applied: desktop-to-phone filter sync now preserves `doc`, `water`, `toilet`, `hirkani`, `ambulance`, and `halt` filters.
+- Fix applied: zero-result subfilter chips are disabled for the selected palkhi.
+- Fix applied: desktop map search now combines with the active type filter instead of overriding it.
 
 ## Production Link Status
 
@@ -38,12 +41,12 @@ Note: first-time map rendering still depends on Leaflet CDN availability. After 
 
 | Filter | Count |
 |---|---:|
-| All non-water points | 386 |
+| All non-water points | 403 |
 | Ambulance pins | 120 |
-| Ambulance vehicles | 87 |
+| Ambulance vehicles | 89 |
 | ALS ambulance vehicles | 18 |
-| BLS ambulance vehicles | 36 |
-| 102 ambulance vehicles | 37 |
+| BLS ambulance vehicles | 38 |
+| 102 ambulance vehicles | 35 |
 | 108 ambulance vehicles | 4 |
 | Doctor / health points | 153 |
 | PHC | 38 |
@@ -56,20 +59,20 @@ Note: first-time map rendering still depends on Leaflet CDN availability. After 
 | Water approximate | 138 |
 | Toilet points | 23 |
 | Hirkani points | 67 |
-| Halt total | 91 |
+| Halt total | 108 |
 | Mukkam | 29 |
-| Visava | 62 |
+| Visava | 79 |
 
 ### Sant Dnyaneshwar Maharaj Palkhi
 
 | Filter | Count |
 |---|---:|
-| All non-water points | 199 |
+| All non-water points | 205 |
 | Ambulance pins | 73 |
-| Ambulance vehicles | 49 |
+| Ambulance vehicles | 51 |
 | ALS ambulance vehicles | 8 |
-| BLS ambulance vehicles | 20 |
-| 102 ambulance vehicles | 24 |
+| BLS ambulance vehicles | 22 |
+| 102 ambulance vehicles | 22 |
 | 108 ambulance vehicles | 4 |
 | Doctor / health points | 62 |
 | PHC | 18 |
@@ -82,15 +85,15 @@ Note: first-time map rendering still depends on Leaflet CDN availability. After 
 | Water approximate | 138 |
 | Toilet points | 10 |
 | Hirkani points | 39 |
-| Halt total | 43 |
+| Halt total | 49 |
 | Mukkam | 15 |
-| Visava | 28 |
+| Visava | 34 |
 
 ### Sant Tukaram Maharaj Palkhi
 
 | Filter | Count |
 |---|---:|
-| All non-water points | 195 |
+| All non-water points | 206 |
 | Ambulance pins | 48 |
 | Ambulance vehicles | 46 |
 | ALS ambulance vehicles | 11 |
@@ -108,9 +111,9 @@ Note: first-time map rendering still depends on Leaflet CDN availability. After 
 | Water approximate | 0 |
 | Toilet points | 13 |
 | Hirkani points | 30 |
-| Halt total | 48 |
+| Halt total | 59 |
 | Mukkam | 14 |
-| Visava | 34 |
+| Visava | 45 |
 
 ## Zero Result Filters
 
@@ -119,7 +122,7 @@ These filters are technically working but show no results with current data:
 - Tukaram + 108 ambulance: 0.
 - Tukaram + approximate water: 0.
 
-Recommendation: either leave them as-is because the data is true, or hide disabled subfilter chips when the selected palkhi has zero matching points.
+Fix applied: these subfilter chips are now disabled when Tukaram palkhi is selected, while the underlying data remains unchanged.
 
 ## Filter Wiring Status
 
@@ -131,12 +134,12 @@ Passed:
 - Subfilter keys match between HTML and JS: `als`, `bls`, `102`, `108`, `phc`, `rh`, `pvt`, `hbt`, `icu`, `actual`, `approx`, `mukkam`, `visava`.
 - Officials and dignitaries scripts render successfully when a DOM is available.
 
-Issue found:
+Fixed:
 
-- Desktop shell mirror from `map.html` back to the phone iframe handles `ambulance` and `halt`, but does not explicitly handle `doc`, `water`, `toilet`, or `hirkani`.
-- Impact: the right-side desktop map filters correctly, but the left phone iframe may not switch to the same category after selecting those filters on the desktop map.
-- File: `assets/js/shell.js`
-- Suggested fix: in `applyDesktopFilterToApp`, pass all shared category names directly to `w.chooseHelp(t)` when `t` is one of `ambulance`, `doc`, `water`, `toilet`, `hirkani`, `halt`.
+- Desktop shell mirror from `map.html` back to the phone iframe now handles `ambulance`, `doc`, `water`, `toilet`, `hirkani`, and `halt`.
+- The phone iframe no longer resets back to "all" immediately after a desktop map filter sync.
+- The phone "near" shortcut maps to desktop `all` instead of an unsupported `near` type.
+- Desktop map search now applies inside the active filter instead of replacing the active filter.
 
 ## Legacy / Preview Pages
 
@@ -157,8 +160,8 @@ Recommendation: either update preview pages to load the same script set as produ
 
 - `wari-ambulance-contacts-2026.js` loads successfully.
 - MEMS roster rows available: 47.
-- Roster vehicles matched to current plotted app vehicle numbers: 31.
-- Roster vehicles not currently plotted by exact vehicle number: 16.
+- Roster vehicles matched to current plotted app vehicle numbers: 33.
+- Roster vehicles not currently plotted by exact vehicle number: 14.
 - Ambulance pins with a contact/doctor/pilot after merge: 108.
 
 Route data:
@@ -169,7 +172,5 @@ Route data:
 
 ## Recommended Next Fixes
 
-1. Fix desktop-to-phone filter sync in `assets/js/shell.js`.
-2. Decide whether to hide zero-result Tukaram subfilters or keep them visible as truthful empty filters.
-3. Archive or refresh the legacy preview pages.
-4. Keep monitoring the 16 MEMS roster vehicles not plotted by exact vehicle number; some appear to be vehicle-number conflicts between sources.
+1. Archive or refresh the legacy preview pages.
+2. Keep monitoring the 14 MEMS roster vehicles not plotted by exact vehicle number; some appear to be vehicle-number conflicts between sources.

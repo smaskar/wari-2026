@@ -13,11 +13,22 @@ function typeKeep(p){if(typeFilter==='all')return!W.hasWater(p);return false
 ||typeFilter==='toilet'&&W.isToilet(p)
 ||typeFilter==='hirkani'&&W.hasHirkani(p)
 ||typeFilter==='halt'&&W.isHalt(p)&&(haltSub==='all'||haltSub==='mukkam'&&!W.isVisava(p)||haltSub==='visava'&&W.isVisava(p))}
+function subCount(forCat,attr,val){return POINTS.filter(palkhiKeep).filter(p=>{
+ if(forCat==='ambulance')return W.hasAmb(p)&&(val==='all'||val==='als'&&W.isALS(p)||val==='bls'&&W.isBLS(p)||val==='102'&&W.is102(p)||val==='108'&&W.is108(p));
+ if(forCat==='doc')return isDocCat(p)&&(val==='all'||val==='phc'&&W.isPHC(p)||val==='rh'&&W.isRuralHospital(p)||val==='pvt'&&W.isPrivateHospital(p)||val==='hbt'&&W.isHBT(p)||val==='icu'&&W.isICU(p));
+ if(forCat==='water')return W.hasWater(p)&&(val==='all'||val==='actual'&&!W.isApprox(p)||val==='approx'&&W.isApprox(p));
+ if(forCat==='halt')return W.isHalt(p)&&(val==='all'||val==='mukkam'&&!W.isVisava(p)||val==='visava'&&W.isVisava(p));
+ return false;}).length}
+function updateSubChips(){[['docsubChips','doc','doc',()=>docSub,v=>docSub=v],['ambsubChips','ambulance','amb',()=>ambSub,v=>ambSub=v],['watsubChips','water','wat',()=>watSub,v=>watSub=v],['haltsubChips','halt','halt',()=>haltSub,v=>haltSub=v]].forEach(function(row){
+ var id=row[0],forCat=row[1],attr=row[2],getv=row[3],setv=row[4],el=document.getElementById(id);if(!el)return;var active=getv();
+ el.querySelectorAll('.chip').forEach(function(b){var v=b.dataset[attr],n=subCount(forCat,attr,v),off=v!=='all'&&n===0;b.disabled=off;b.classList.toggle('disabled',off);b.title=off?'या पालखीसाठी डेटा उपलब्ध नाही':'';if(off&&active===v){active='all';setv('all')}});
+ el.querySelectorAll('.chip').forEach(function(b){b.classList.toggle('active',b.dataset[attr]===active)});
+})}
 function togglePanel(){const pn=document.getElementById('panel'),tg=document.getElementById('ptoggle'),open=pn.classList.toggle('collapsed');tg.textContent=open?'नियंत्रण ▾':'बंद करा ▴';tg.setAttribute('aria-expanded',String(!open));setTimeout(()=>map.invalidateSize(true),220)}
 function palkhiKeep(p){return palkhiFilter==='all'||p.palkhi===palkhiFilter||p.palkhi==='both'}
 let searchQ='';function setSearch(v){searchQ=(v||'').trim().toLowerCase();draw()}
 function searchKeep(p){if(!searchQ)return true;return [p.label,p.place,p.vehicle,p.doctor,p.pilot,p.base,p.call,p.mo].some(f=>f&&String(f).toLowerCase().includes(searchQ))}
-function keep(p){return palkhiKeep(p)&&(searchQ?searchKeep(p):typeKeep(p))}
+function keep(p){return palkhiKeep(p)&&searchKeep(p)&&typeKeep(p)}
 function dir(p){return`https://www.google.com/maps/dir/?api=1&destination=${p.lat},${p.lng}`}
 function notifyParent(){if(silent)return;try{parent.postMessage({type:'DESKTOP_MAP_FILTER',palkhi:palkhiFilter,typeFilter:typeFilter},'*')}catch(e){}}
 const HK_PHOTO='./assets/img/hirkani-booth.jpg',HK_VIDEO='./assets/video/hirkani-1.mp4';
@@ -29,18 +40,18 @@ if(palkhiFilter!=='tukaram'&&dny.length)L.polyline(dny,{color:'#1d5fc4',weight:4
 if(palkhiFilter!=='dnyaneshwar'&&tuk.length)L.polyline(tuk,{color:'#f4711f',weight:4,opacity:.8,lineCap:'round',lineJoin:'round'}).addTo(routeLayer);
 let tr=window.WARI_ROUTE_TUK_RET||[];
 if(palkhiFilter!=='dnyaneshwar'&&tr.length)L.polyline(tr,{color:'#f4711f',weight:3,opacity:.55,dashArray:'8 8'}).addTo(routeLayer);}
-function draw(){routeLayer.clearLayers();layer.clearLayers();drawRoute();let pts=POINTS.filter(keep);document.getElementById('count').textContent=pts.length;pts.forEach(p=>L.marker([p.lat,p.lng],{icon:L.divIcon({className:'',html:`<div class="pin ${W.cls(p)} pal-${p.palkhi}${p.live?' has-live':''}${W.multi(p)?' multi':''}${W.isApprox(p)?' approx':''}">${W.icon(p)}</div>`,iconSize:[30,30],iconAnchor:[15,15]})}).bindPopup(popup(p),{maxWidth:250}).addTo(layer));if(pts.length&&!userLocation){map.fitBounds(L.latLngBounds(pts.map(p=>[p.lat,p.lng])).pad(.1));}}
+function draw(){updateSubChips();routeLayer.clearLayers();layer.clearLayers();drawRoute();let pts=POINTS.filter(keep);document.getElementById('count').textContent=pts.length;pts.forEach(p=>L.marker([p.lat,p.lng],{icon:L.divIcon({className:'',html:`<div class="pin ${W.cls(p)} pal-${p.palkhi}${p.live?' has-live':''}${W.multi(p)?' multi':''}${W.isApprox(p)?' approx':''}">${W.icon(p)}</div>`,iconSize:[30,30],iconAnchor:[15,15]})}).bindPopup(popup(p),{maxWidth:250}).addTo(layer));if(pts.length&&!userLocation){map.fitBounds(L.latLngBounds(pts.map(p=>[p.lat,p.lng])).pad(.1));}}
 function showUser(lat,lng,acc){userLocation=[lat,lng];userLayer.clearLayers();L.circle([lat,lng],{radius:Math.max(acc||20,20),className:'accuracy'}).addTo(userLayer);L.marker([lat,lng],{icon:L.divIcon({className:'',html:'<div class="userpin"></div>',iconSize:[24,24],iconAnchor:[12,12]})}).bindPopup('आपण येथे आहात').addTo(userLayer).openPopup();document.getElementById('locStatus').textContent='माझे स्थान दिसत आहे';map.setView([lat,lng],16);setTimeout(()=>map.invalidateSize(true),120)}
 function locateMe(){if(!navigator.geolocation){document.getElementById('locStatus').textContent='Location सुविधा उपलब्ध नाही';return;}document.getElementById('locStatus').textContent='GPS स्थान घेत आहोत…';navigator.geolocation.getCurrentPosition(pos=>showUser(pos.coords.latitude,pos.coords.longitude,pos.coords.accuracy),()=>{document.getElementById('locStatus').textContent='GPS permission द्या';},{enableHighAccuracy:true,timeout:15000,maximumAge:20000})}
 function setPalkhi(p,fromParent){silent=!!fromParent;palkhiFilter=p||'all';document.querySelectorAll('#palkhiChips .chip').forEach(x=>x.classList.toggle('active',x.dataset.palkhi===palkhiFilter));draw();notifyParent();silent=false}
 const SUBROWS=[['docsubChips','doc','doc',v=>docSub=v],['ambsubChips','ambulance','amb',v=>ambSub=v],['watsubChips','water','wat',v=>watSub=v],['haltsubChips','halt','halt',v=>haltSub=v]];
-function setType(f,fromParent){silent=!!fromParent;typeFilter=f||'all';document.querySelectorAll('#typeChips .chip,.legend-btn[data-filter]').forEach(x=>x.classList.toggle('active',x.dataset.filter===typeFilter));
+function setType(f,fromParent){silent=!!fromParent;typeFilter=/^(all|ambulance|doc|water|toilet|hirkani|halt)$/.test(f||'')?f:'all';document.querySelectorAll('#typeChips .chip,.legend-btn[data-filter]').forEach(x=>x.classList.toggle('active',x.dataset.filter===typeFilter));
 SUBROWS.forEach(function(row){var el=document.getElementById(row[0]);if(!el)return;el.style.display=typeFilter===row[1]?'flex':'none';if(typeFilter!==row[1]){row[3]('all');el.querySelectorAll('.chip').forEach(x=>x.classList.toggle('active',x.dataset[row[2]]==='all'))}});
 draw();notifyParent();silent=false}
-function setDocSub(s){docSub=s;document.querySelectorAll('#docsubChips .chip').forEach(x=>x.classList.toggle('active',x.dataset.doc===s));draw()}
-function setAmbSub(s){ambSub=s;document.querySelectorAll('#ambsubChips .chip').forEach(x=>x.classList.toggle('active',x.dataset.amb===s));draw()}
-function setWatSub(s){watSub=s;document.querySelectorAll('#watsubChips .chip').forEach(x=>x.classList.toggle('active',x.dataset.wat===s));draw()}
-function setHaltSub(s){haltSub=s;document.querySelectorAll('#haltsubChips .chip').forEach(x=>x.classList.toggle('active',x.dataset.halt===s));draw()}
+function setDocSub(s){if(s!=='all'&&!subCount('doc','doc',s))s='all';docSub=s;document.querySelectorAll('#docsubChips .chip').forEach(x=>x.classList.toggle('active',x.dataset.doc===s));draw()}
+function setAmbSub(s){if(s!=='all'&&!subCount('ambulance','amb',s))s='all';ambSub=s;document.querySelectorAll('#ambsubChips .chip').forEach(x=>x.classList.toggle('active',x.dataset.amb===s));draw()}
+function setWatSub(s){if(s!=='all'&&!subCount('water','wat',s))s='all';watSub=s;document.querySelectorAll('#watsubChips .chip').forEach(x=>x.classList.toggle('active',x.dataset.wat===s));draw()}
+function setHaltSub(s){if(s!=='all'&&!subCount('halt','halt',s))s='all';haltSub=s;document.querySelectorAll('#haltsubChips .chip').forEach(x=>x.classList.toggle('active',x.dataset.halt===s));draw()}
 function resetMap(fromParent){silent=!!fromParent;palkhiFilter='all';typeFilter='all';docSub='all';ambSub='all';watSub='all';haltSub='all';userLocation=null;
 SUBROWS.forEach(function(row){var el=document.getElementById(row[0]);if(!el)return;el.style.display='none';el.querySelectorAll('.chip').forEach(x=>x.classList.toggle('active',x.dataset[row[2]]==='all'))});
 document.querySelectorAll('#palkhiChips .chip').forEach(x=>x.classList.toggle('active',x.dataset.palkhi==='all'));document.querySelectorAll('#typeChips .chip').forEach(x=>x.classList.toggle('active',x.dataset.filter==='all'));draw();notifyParent();silent=false}

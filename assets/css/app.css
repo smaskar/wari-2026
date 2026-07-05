@@ -12,6 +12,7 @@
 .pop-thumb{width:100%;max-width:220px;border-radius:9px;display:block;margin:6px 0 4px}
 .docsub{display:flex;flex-wrap:wrap;gap:7px;align-items:center;margin-top:10px;padding:9px 11px;background:#eef8f0;border:1px solid #cfe9d6;border-radius:14px}
 .docsub-label{font-weight:900;font-size:13px;color:#2b6b45;margin-right:2px}
+.chip:disabled,.chip.disabled{opacity:.42;cursor:not-allowed;filter:grayscale(.2)}
 .accuracy{stroke:#2f6fd6;stroke-width:2;fill:#2f6fd6;fill-opacity:.13}
 .legend-btn{font-size:12px;font-weight:950;border-radius:999px;background:#fff;border:1px solid var(--line);padding:7px 11px;color:#4c3c2a;cursor:pointer;min-height:36px}
 .legend-btn.active{background:#23160d;color:#fff;border-color:#23160d}
