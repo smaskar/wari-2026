@@ -35,6 +35,7 @@
           <button class="chip" data-filter="doc">🩺 डॉक्टर / दवाखाना</button>
           <button class="chip" data-filter="water">💧 पाणी</button>
           <button class="chip" data-filter="toilet">🚻 शौचालये</button>
+          <button class="chip" data-filter="police">🚔 पोलीस</button>
           <button class="chip" data-filter="hirkani">🤱 हिरकणी कक्ष</button>
           <button class="chip" data-filter="halt">⛺ मुक्काम / विसावा</button>
         </div>
@@ -72,7 +73,7 @@
         <details class="officials-box"><summary>🚔 पोलीस संपर्क · Police (४४ स्टेशन)</summary><div id="police-body"></div></details>
       </div>
     </div>
-    <div class="legend"><button class="legend-btn" data-filter="all" onclick="setType('all')">🗺 सर्व</button><button class="legend-btn" data-filter="ambulance" onclick="setType('ambulance')">🚑 रुग्णवाहिका</button><button class="legend-btn" data-filter="doc" onclick="setType('doc')">🩺 डॉक्टर/दवाखाना</button><button class="legend-btn" data-filter="water" onclick="setType('water')">💧 पाणी</button><button class="legend-btn" data-filter="toilet" onclick="setType('toilet')">🚻 शौचालये</button><button class="legend-btn" data-filter="hirkani" onclick="setType('hirkani')">🤱 हिरकणी</button><button class="legend-btn" data-filter="halt" onclick="setType('halt')">⛺ मुक्काम</button><button class="legend-btn loc-btn" onclick="locateMe()">📍 माझे स्थान</button></div>
+    <div class="legend"><button class="legend-btn" data-filter="all" onclick="setType('all')">🗺 सर्व</button><button class="legend-btn" data-filter="ambulance" onclick="setType('ambulance')">🚑 रुग्णवाहिका</button><button class="legend-btn" data-filter="doc" onclick="setType('doc')">🩺 डॉक्टर/दवाखाना</button><button class="legend-btn" data-filter="water" onclick="setType('water')">💧 पाणी</button><button class="legend-btn" data-filter="toilet" onclick="setType('toilet')">🚻 शौचालये</button><button class="legend-btn" data-filter="police" onclick="setType('police')">🚔 पोलीस</button><button class="legend-btn" data-filter="hirkani" onclick="setType('hirkani')">🤱 हिरकणी</button><button class="legend-btn" data-filter="halt" onclick="setType('halt')">⛺ मुक्काम</button><button class="legend-btn loc-btn" onclick="locateMe()">📍 माझे स्थान</button></div>
   </div>
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script src="./wari-points-1.js"></script>
@@ -91,6 +92,7 @@
   <script src="./wari-points-solapur.js"></script>
   <script src="./wari-points-water-solapur.js"></script>
   <script src="./wari-points-toilets.js"></script>
+  <script src="./wari-points-police.js"></script>
   <script src="./wari-points-water-filling.js"></script>
   <script src="./wari-points-amb-supplement.js"></script>
   <script src="./wari-points-phc102.js"></script>

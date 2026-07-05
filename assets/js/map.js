@@ -11,6 +11,7 @@ function typeKeep(p){if(typeFilter==='all')return!W.hasWater(p);return false
 ||typeFilter==='doc'&&isDocCat(p)&&(docSub==='all'||docSub==='phc'&&W.isPHC(p)||docSub==='rh'&&W.isRuralHospital(p)||docSub==='pvt'&&W.isPrivateHospital(p)||docSub==='hbt'&&W.isHBT(p)||docSub==='icu'&&W.isICU(p))
 ||typeFilter==='water'&&W.hasWater(p)&&(watSub==='all'||watSub==='actual'&&!W.isApprox(p)||watSub==='approx'&&W.isApprox(p))
 ||typeFilter==='toilet'&&W.isToilet(p)
+||typeFilter==='police'&&W.isPolice(p)
 ||typeFilter==='hirkani'&&W.hasHirkani(p)
 ||typeFilter==='halt'&&W.isHalt(p)&&(haltSub==='all'||haltSub==='mukkam'&&!W.isVisava(p)||haltSub==='visava'&&W.isVisava(p))}
 function subCount(forCat,attr,val){return POINTS.filter(palkhiKeep).filter(p=>{
@@ -45,7 +46,7 @@ function showUser(lat,lng,acc){userLocation=[lat,lng];userLayer.clearLayers();L.
 function locateMe(){if(!navigator.geolocation){document.getElementById('locStatus').textContent='Location सुविधा उपलब्ध नाही';return;}document.getElementById('locStatus').textContent='GPS स्थान घेत आहोत…';navigator.geolocation.getCurrentPosition(pos=>showUser(pos.coords.latitude,pos.coords.longitude,pos.coords.accuracy),()=>{document.getElementById('locStatus').textContent='GPS permission द्या';},{enableHighAccuracy:true,timeout:15000,maximumAge:20000})}
 function setPalkhi(p,fromParent){silent=!!fromParent;palkhiFilter=p||'all';document.querySelectorAll('#palkhiChips .chip').forEach(x=>x.classList.toggle('active',x.dataset.palkhi===palkhiFilter));draw();notifyParent();silent=false}
 const SUBROWS=[['docsubChips','doc','doc',v=>docSub=v],['ambsubChips','ambulance','amb',v=>ambSub=v],['watsubChips','water','wat',v=>watSub=v],['haltsubChips','halt','halt',v=>haltSub=v]];
-function setType(f,fromParent){silent=!!fromParent;typeFilter=/^(all|ambulance|doc|water|toilet|hirkani|halt)$/.test(f||'')?f:'all';document.querySelectorAll('#typeChips .chip,.legend-btn[data-filter]').forEach(x=>x.classList.toggle('active',x.dataset.filter===typeFilter));
+function setType(f,fromParent){silent=!!fromParent;typeFilter=/^(all|ambulance|doc|water|toilet|police|hirkani|halt)$/.test(f||'')?f:'all';document.querySelectorAll('#typeChips .chip,.legend-btn[data-filter]').forEach(x=>x.classList.toggle('active',x.dataset.filter===typeFilter));
 SUBROWS.forEach(function(row){var el=document.getElementById(row[0]);if(!el)return;el.style.display=typeFilter===row[1]?'flex':'none';if(typeFilter!==row[1]){row[3]('all');el.querySelectorAll('.chip').forEach(x=>x.classList.toggle('active',x.dataset[row[2]]==='all'))}});
 draw();notifyParent();silent=false}
 function setDocSub(s){if(s!=='all'&&!subCount('doc','doc',s))s='all';docSub=s;document.querySelectorAll('#docsubChips .chip').forEach(x=>x.classList.toggle('active',x.dataset.doc===s));draw()}
