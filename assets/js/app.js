@@ -13,6 +13,9 @@ function initLive(){document.querySelectorAll('video[data-hls]:not([data-init])'
 function hirkaniMedia(p){let src=W.safeAsset(p&&p.photo,HIRKANI_PHOTO);return`<div class="hk-media"><img src="${W.escAttr(src)}" alt="छायाचित्र" loading="lazy" onerror="this.remove()"/></div>`}
 function inP(p){return currentPalkhi==='all'||p.palkhi===currentPalkhi||p.palkhi==='both'}
 function isDocCat(p){return(W.hasHealth(p)||W.hasDoctor(p))&&p.type!=='Ambulance'}
+// Urgency rank for list sorting (lower = more critical). Used to break distance
+// ties in the mixed view and to order the no-location default.
+function catPri(p){if(p.type==='Ambulance')return 0;if(W.isICU(p))return 1;if(isDocCat(p)||W.hasAmb(p))return 2;if(W.hasWater(p))return 3;if(W.isToilet(p))return 4;if(W.hasHirkani(p))return 5;if(W.isPolice(p))return 6;if(W.isCharanseva(p))return 7;if(W.isHalt(p))return 8;return 9}
 function inC(p,c=cat){if(c==='near')return true;if(c==='all')return!W.hasWater(p);return false
 ||c==='ambulance'&&W.hasAmb(p)&&(ambSub==='all'||ambSub==='als'&&W.isALS(p)||ambSub==='bls'&&W.isBLS(p)||ambSub==='102'&&W.is102(p)||ambSub==='108'&&W.is108(p))
 ||c==='doc'&&isDocCat(p)&&(docSub==='all'||docSub==='phc'&&W.isPHC(p)||docSub==='rh'&&W.isRuralHospital(p)||docSub==='pvt'&&W.isPrivateHospital(p)||docSub==='hbt'&&W.isHBT(p)||docSub==='icu'&&W.isICU(p))
@@ -46,7 +49,21 @@ if(refLoc()&&rad<99999999){pts=all.filter(p=>p.dist!=null&&p.dist<=rad);
   else if(!pts.length){pts=all.filter(p=>p.dist!=null).sort((a,b)=>a.dist-b.dist).slice(0,3);pts.forEach(p=>p._fb=true)}
  }
 }
-return pts.sort((a,b)=>refLoc()?(a.dist??9e9)-(b.dist??9e9):(a.palkhi+a.type+a.label).localeCompare(b.palkhi+b.type+b.label))}
+var mixed=(c==='all'||c==='near'); // mixed view = show urgency within a distance band
+return pts.sort(function(a,b){
+  if(refLoc()){
+    var da=a.dist==null?9e9:a.dist, db=b.dist==null?9e9:b.dist;
+    if(mixed){ // nearest-first in ~150m bands, then most-critical category within the band
+      var ba=Math.floor(da/150), bb=Math.floor(db/150); if(ba!==bb)return ba-bb;
+      var pa=catPri(a), pb=catPri(b); if(pa!==pb)return pa-pb;
+    }
+    if(da!==db)return da-db;
+    return (a.label||'').localeCompare(b.label||''); // stable tie-break
+  }
+  // no location yet — emergency categories first, then palkhi + name
+  var pa=catPri(a), pb=catPri(b); if(pa!==pb)return pa-pb;
+  return (a.palkhi+a.label).localeCompare(b.palkhi+b.label);
+})}
 function counts(){let s=refLoc()?' जवळ':' एकूण';let set=(id,n)=>{let e=$(id);if(e)e.textContent=n+s};
 let ap=POINTS.filter(p=>inP(p)&&okSearch(p)&&W.hasAmb(p));if(refLoc()&&rad<99999999)ap=ap.filter(p=>{let d=dist(p);return d!=null&&d<=rad});
 set('countAmb',W.vehicleCount(ap));set('countDoc',visN(isDocCat));set('countHalt',visN(W.isHalt));set('countHirkani',visN(W.hasHirkani));set('countWater',visN(W.hasWater));set('countPolice',visN(W.isPolice));set('countCharanseva',visN(W.isCharanseva));
