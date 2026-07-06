@@ -1,4 +1,4 @@
-const CACHE_VERSION = 'wari2026-v136';
+const CACHE_VERSION = 'wari2026-v137';
 const APP_SHELL = [
   './',
   './index.html',
