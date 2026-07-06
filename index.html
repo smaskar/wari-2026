@@ -6,15 +6,15 @@
   <title>आरोग्य संपन्न वारी</title>
   <link rel="manifest" href="./manifest.webmanifest" />
   <meta name="theme-color" content="#f27405" />
-  <script>if(/Android|iPhone|iPod|IEMobile|Mobile/i.test(navigator.userAgent)||matchMedia('(max-width:700px)').matches)location.replace('./app.html?v=126');</script>
+  <script>if(/Android|iPhone|iPod|IEMobile|Mobile/i.test(navigator.userAgent)||matchMedia('(max-width:700px)').matches)location.replace('./app.html?v=130');</script>
   <link rel="stylesheet" href="./assets/css/shell.css" />
 </head>
 <body>
-  <iframe class="mobile-frame" src="./app.html?v=126" title="आरोग्य संपन्न वारी" allow="geolocation; clipboard-write; web-share"></iframe>
+  <iframe class="mobile-frame" src="./app.html?v=130" title="आरोग्य संपन्न वारी" allow="geolocation; clipboard-write; web-share"></iframe>
 
   <main class="desktop-shell">
     <section class="phone-wrap">
-      <iframe id="appFrame" src="./app.html?v=126" title="आरोग्य संपन्न वारी मोबाइल UI" allow="geolocation; clipboard-write; web-share"></iframe>
+      <iframe id="appFrame" src="./app.html?v=130" title="आरोग्य संपन्न वारी मोबाइल UI" allow="geolocation; clipboard-write; web-share"></iframe>
     </section>
     <section class="map-wrap">
       <div class="desktop-head">
@@ -23,10 +23,11 @@
         <div class="desk-actions">
           <button class="desk-btn" onclick="locateBothMaps()">📍 माझ्या जवळ मदत शोधा<span>दोन्ही map मध्ये माझे स्थान दाखवा</span></button>
           <button class="desk-btn" onclick="showDesktopMap()">🗺 नकाशा दाखवा<span>उजव्या मदत नकाशावर सर्व points दाखवा</span></button>
+          <button class="desk-btn" onclick="showDesktopType('charanseva')">🙏 चरणसेवा<span>फक्त चरणसेवा points दाखवा</span></button>
         </div>
       </div>
       <!-- Google My Map is intentionally disabled for now. Kept for later reference: https://www.google.com/maps/d/u/0/embed?mid=1151dFIqz_htDjnDRMRnDqnJQE9JW3VQ -->
-      <iframe id="osmFrame" class="map-frame" src="./map.html?v=126" title="आरोग्य संपन्न वारी मदत नकाशा" allow="geolocation; clipboard-write; web-share" loading="lazy"></iframe>
+      <iframe id="osmFrame" class="map-frame" src="./map.html?v=130" title="आरोग्य संपन्न वारी मदत नकाशा" allow="geolocation; clipboard-write; web-share" loading="lazy"></iframe>
     </section>
   </main>
   <script src="./assets/js/shell.js"></script>

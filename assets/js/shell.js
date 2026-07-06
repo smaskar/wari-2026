@@ -1,6 +1,7 @@
 function postToDesktopMap(msg){var m=document.getElementById('osmFrame');if(m&&m.contentWindow)m.contentWindow.postMessage(msg,'*');}
 function setDesktopPalkhi(p){postToDesktopMap({type:'PALKHI_FILTER',palkhi:p||'all'});}
 function setDesktopType(t){postToDesktopMap({type:'TYPE_FILTER',typeFilter:t||'all'});}
+function showDesktopType(t){setDesktopType(t);applyDesktopFilterToApp({typeFilter:t||'all'});}
 function showDesktopMap(){postToDesktopMap({type:'RESET_MAP'});var m=document.getElementById('osmFrame');if(m)m.focus();}
 function locateDesktopMap(){postToDesktopMap({type:'LOCATE_ME'});var m=document.getElementById('osmFrame');if(m)m.focus();}
 function locateBothMaps(){callApp('locateMe');setTimeout(locateDesktopMap,200);}
@@ -31,7 +32,7 @@ function applyDesktopFilterToApp(data){
     if(t==='health') t='doc';
     if(t==='all' || t==='satara'){
       if(typeof w.showMappedArea==='function') w.showMappedArea();
-    }else if(/^(ambulance|doc|water|toilet|hirkani|halt)$/.test(t) && typeof w.chooseHelp==='function'){
+    }else if(/^(ambulance|doc|water|toilet|police|charanseva|hirkani|halt)$/.test(t) && typeof w.chooseHelp==='function'){
       w.chooseHelp(t);
     }
     setTimeout(function(){backToAppMap(frame,true);},80);
@@ -92,7 +93,7 @@ function forceHelpMap(){
   document.querySelectorAll('iframe').forEach(function(frame){
     var src=frame.getAttribute('src')||'';
     if(src.indexOf('google.com/maps')>-1 || src.indexOf('maps/d/u')>-1){
-      frame.setAttribute('src','./map.html?v=126');
+      frame.setAttribute('src','./map.html?v=130');
       frame.setAttribute('title','वारी सहाय्य मदत नकाशा');
     }
   });
@@ -103,7 +104,7 @@ setTimeout(forceHelpMap,1500);
 function registerOfflineSupport(){
   if(!('serviceWorker' in navigator)) return;
   window.addEventListener('load', function(){
-    navigator.serviceWorker.register('./sw.js?v=126').then(function(reg){
+    navigator.serviceWorker.register('./sw.js?v=130').then(function(reg){
       function syncNow(){
         if(reg.update) reg.update();
         if(navigator.serviceWorker.controller){navigator.serviceWorker.controller.postMessage({type:'SYNC_NOW'});}
