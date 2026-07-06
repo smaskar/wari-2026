@@ -71,7 +71,10 @@ window.WariData=(function(){
     return s;}
   function multi(p){return services(p).filter(x=>!/शौचालये|वैद्यकीय अधिकारी/.test(x)).length>1}
   function icon(p){return isCharanseva(p)?'🙏':isPolice(p)?'🚔':hasHirkani(p)?'🤱':isToilet(p)?'🚻':isHalt(p)?'⛺':hasHospital(p)?'🏥':hasDoc(p)?'🩺':hasAmb(p)?'🚑':hasWater(p)?'💧':'📍'}
-  function esc(s){return(s||'').toString().replace(/[&<>]/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[ch]))}
+  function esc(s){return(s||'').toString().replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]))}
+  function escAttr(s){return esc(s)}
+  function safeAsset(src,fallback){src=(src||'').toString().trim();return /^\.\/assets\/[A-Za-z0-9/_.,% -]+\.(?:png|jpe?g|webp|gif|mp4)$/i.test(src)?src:(fallback||'')}
+  function safeExternalUrl(url){url=(url||'').toString().trim();try{let u=new URL(url);return /^https?:$/.test(u.protocol)?u.href:''}catch(e){return''}}
   function tel(s){return(s||'').replace(/[^0-9+]/g,'')}
   function vehKey(v){return(v||'').toUpperCase().replace(/[^A-Z0-9]/g,'')}
   function vehicleKeys(v){let m=(v||'').toUpperCase().match(/MH\s*-?\s*\d{1,2}\s*-?\s*[A-Z]{1,3}\s*-?\s*\d{3,4}/g)||[];return m.map(vehKey)}
@@ -118,5 +121,5 @@ window.WariData=(function(){
     applyAmbContacts(pts);
     return pts;
   }
-  return{NAMES,build,isHalt,hasAmb,hasDoc,hasHospital,hasHealth,hasWater,hasHirkani,isSatara,isPHC,isRuralHospital,isHBT,isPrivateHospital,hasDoctor,isEMS,isMO,isALS,isBLS,is102,is108,cls,icon,isToilet,isPolice,isCharanseva,isICU,isApprox,isVisava,services,multi,esc,tel,countContacts,uniqueCount,vehicleCount};
+  return{NAMES,build,isHalt,hasAmb,hasDoc,hasHospital,hasHealth,hasWater,hasHirkani,isSatara,isPHC,isRuralHospital,isHBT,isPrivateHospital,hasDoctor,isEMS,isMO,isALS,isBLS,is102,is108,cls,icon,isToilet,isPolice,isCharanseva,isICU,isApprox,isVisava,services,multi,esc,escAttr,safeAsset,safeExternalUrl,tel,countContacts,uniqueCount,vehicleCount};
 })();

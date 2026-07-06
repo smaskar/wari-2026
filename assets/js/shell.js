@@ -1,4 +1,4 @@
-function postToDesktopMap(msg){var m=document.getElementById('osmFrame');if(m&&m.contentWindow)m.contentWindow.postMessage(msg,'*');}
+function postToDesktopMap(msg){var m=document.getElementById('osmFrame');if(m&&m.contentWindow)m.contentWindow.postMessage(msg,location.origin);}
 function setDesktopPalkhi(p){postToDesktopMap({type:'PALKHI_FILTER',palkhi:p||'all'});}
 function setDesktopType(t){postToDesktopMap({type:'TYPE_FILTER',typeFilter:t||'all'});}
 function showDesktopType(t){setDesktopType(t);applyDesktopFilterToApp({typeFilter:t||'all'});}
@@ -39,7 +39,9 @@ function applyDesktopFilterToApp(data){
   }catch(e){console.warn('Unable to apply desktop filter to app',e);}
 }
 window.addEventListener('message',function(e){
-  if(!e.data) return;
+  if(e.origin!==location.origin || !e.data) return;
+  var m=document.getElementById('osmFrame');
+  if(m && e.source!==m.contentWindow) return;
   if(e.data.type==='DESKTOP_MAP_FILTER') applyDesktopFilterToApp(e.data);
 });
 function installAppButtons(frame){
@@ -93,7 +95,7 @@ function forceHelpMap(){
   document.querySelectorAll('iframe').forEach(function(frame){
     var src=frame.getAttribute('src')||'';
     if(src.indexOf('google.com/maps')>-1 || src.indexOf('maps/d/u')>-1){
-      frame.setAttribute('src','./map.html?v=133');
+      frame.setAttribute('src','./map.html?v=134');
       frame.setAttribute('title','वारी सहाय्य मदत नकाशा');
     }
   });
@@ -104,7 +106,7 @@ setTimeout(forceHelpMap,1500);
 function registerOfflineSupport(){
   if(!('serviceWorker' in navigator)) return;
   window.addEventListener('load', function(){
-    navigator.serviceWorker.register('./sw.js?v=133').then(function(reg){
+    navigator.serviceWorker.register('./sw.js?v=134').then(function(reg){
       function syncNow(){
         if(reg.update) reg.update();
         if(navigator.serviceWorker.controller){navigator.serviceWorker.controller.postMessage({type:'SYNC_NOW'});}
