@@ -81,7 +81,7 @@ function openShare(i){selectedPoint=POINTS[i]?.label||'';$('modal').classList.ad
 function chooseMukkam(i){closeHelpline();let m=window.WARI_MUKKAMS[i];if(!m)return;
 mukkamRef=[m.lat,m.lng];mukkamName=m.n;userLocation=null;rad=MUKKAM_DEFAULT_RADIUS;
 document.querySelectorAll('#rads .chip').forEach(b=>b.classList.toggle('active',+b.dataset.r===MUKKAM_DEFAULT_RADIUS));
-document.querySelectorAll('#mukkams .mchip').forEach((b,j)=>b.classList.toggle('active',j===i));
+document.querySelectorAll('#mukkams .mchip').forEach(b=>b.classList.toggle('active',b.dataset.mukkam===String(i)));
 if(currentPalkhi!==m.pal)setPalkhi(m.pal);
 openMapPanel();
 if(map){drawMukkamFocus();map.setView(mukkamRef,13)}
@@ -92,7 +92,7 @@ let R=cat==='near'?300:500;rad=R;document.querySelectorAll('#rads .chip').forEac
 (function(){let el=$('mukkams');if(!el||!window.WARI_MUKKAMS)return;
 let h='<button class="mchip clear" onclick="clearMukkam()">🗺 सर्व मार्ग</button>';
 window.WARI_MUKKAMS.forEach((m,i)=>{let ic=m.pal==='tukaram'?'🟠':'🔵';
-h+='<button class="mchip" onclick="chooseMukkam('+i+')">'+ic+' '+(m.d?m.d+' · ':'')+m.n+'</button>'});
+h+='<button class="mchip" data-mukkam="'+i+'" onclick="chooseMukkam('+i+')">'+ic+' '+(m.d?m.d+' · ':'')+m.n+'</button>'});
 el.innerHTML=h})();
 (function(){try{if(localStorage.getItem('wariLocAsk'))return;}catch(e){return}
 let b=document.createElement('div');b.id='locask';
