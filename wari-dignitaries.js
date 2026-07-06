@@ -22,10 +22,12 @@ window.WARI_SECRETARIES=[
     var el=document.getElementById('leaders-strip'); if(!el) return;
     el.innerHTML=window.WARI_DIGNITARIES.map(function(o,i){
       var cm=i===0; // Chief Minister — emphasised: larger than peers, smaller than PM
-      var imgS=cm?' style="max-width:62px;width:62px;height:72px"':'';
+      // Boxes keep the photo's own 208x256 (0.8125) ratio + object-fit:contain
+      // so the FULL photo always shows — nothing is cropped. Peers a touch smaller.
+      var imgS=(cm?'max-width:60px;width:60px;height:74px':'max-width:48px;width:48px;height:59px')+';object-fit:contain';
       var nmS=cm?' style="font-size:11px"':'';
       var dsS=cm?' style="font-size:9.5px"':'';
-      return '<div class="ldr'+(cm?' ldr-cm':'')+'"><img'+imgS+' src="'+o.img+'" alt="'+o.n+'" loading="lazy"/><div><b'+nmS+'>'+o.n+'</b><small'+dsS+'>'+o.d.replace(/, महाराष्ट्र (शासन|राज्य)/,'<br>महाराष्ट्र $1')+'</small></div></div>';
+      return '<div class="ldr'+(cm?' ldr-cm':'')+'"><img style="'+imgS+'" src="'+o.img+'" alt="'+o.n+'" loading="lazy"/><div><b'+nmS+'>'+o.n+'</b><small'+dsS+'>'+o.d.replace(/, महाराष्ट्र (शासन|राज्य)/,'<br>महाराष्ट्र $1')+'</small></div></div>';
     }).join('');
   }
   if(document.readyState!=='loading') render(); else document.addEventListener('DOMContentLoaded', render);
