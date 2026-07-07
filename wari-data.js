@@ -100,8 +100,9 @@ window.WariData=(function(){
     let rawVS=(window.WARI_VISAVA_POINTS||[]).map(x=>norm(x,x.p||'dnyaneshwar'));
     let rawMM=(window.WARI_MYMAPS_POINTS||[]).map(x=>norm(x,x.p||'dnyaneshwar'));
     let rawMB=(window.WARI_MEMSBOOK_POINTS||[]).map(x=>norm(x,x.p||'dnyaneshwar'));
+    let rawMR=(window.WARI_MRSAC_POINTS||[]).map(x=>norm(x,x.p||'both'));
     let notHaltType=p=>!/halt|mukkam|मुक्काम/i.test(p.type||'');
-    let pts=[...rawD.filter(notHaltType),...rawT.filter(notHaltType),...rawHD,...rawHT,...rawS.filter(notHaltType),...rawHK,...rawPV,...rawSOL,...rawW,...rawTL,...rawPO,...rawCS,...rawFP,...rawP2,...rawVS,...rawMM,...rawMB]
+    let pts=[...rawD.filter(notHaltType),...rawT.filter(notHaltType),...rawHD,...rawHT,...rawS.filter(notHaltType),...rawHK,...rawPV,...rawSOL,...rawW,...rawTL,...rawPO,...rawCS,...rawFP,...rawP2,...rawVS,...rawMM,...rawMB,...rawMR]
       .filter(p=>isFinite(p.lat)&&isFinite(p.lng));
     let seen=new Set();
     pts=pts.filter(p=>{let key=[p.palkhi,p.type,p.label,p.place,p.vehicle,p.date,p.day,p.lat.toFixed(5),p.lng.toFixed(5)].join('|').toLowerCase();if(seen.has(key))return false;seen.add(key);return true});
