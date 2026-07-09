@@ -3,17 +3,17 @@
 // Blank v2 phones filled from prior verified directory where the person matches; still-unknown numbers omitted.
 window.WARI_OFFICIALS = {
   admin: [
-    {n:"सौ. शीतल तेली-उगले (भा.प्र.से.)", d:"विभागीय आयुक्त, पुणे विभाग", p:"9822876089"},
-    {n:"नवल किशोर राम (भा.प्र.से.)", d:"आयुक्त, पुणे महानगरपालिका", p:""},
-    {n:"विजय सूर्यवंशी (भा.प्र.से.)", d:"आयुक्त, पिंपरी-चिंचवड महानगरपालिका", p:""},
-    {n:"जितेंद्र डुडी (भा.प्र.से.)", d:"जिल्हाधिकारी, पुणे", p:"9783802020"},
-    {n:"गजानन पाटील (भा.प्र.से.)", d:"मुख्य कार्यकारी अधिकारी (सीईओ), जि.प. पुणे", p:"9850736439"},
-    {n:"संतोष पाटील", d:"जिल्हाधिकारी, सातारा", p:"7720073456"},
-    {n:"श्रीमती याशनी नागराजन (भा.प्र.से.)", d:"मुख्य कार्यकारी अधिकारी (सीईओ), जि.प. सातारा", p:"9958493779"},
-    {n:"कार्तिकेयन एस. (भा.प्र.से.)", d:"जिल्हाधिकारी, सोलापूर", p:"8610480624"},
-    {n:"कुशल जैन (भा.प्र.से.)", d:"मुख्य कार्यकारी अधिकारी (सीईओ), जि.प. सोलापूर", p:"9741627497"},
-    {n:"चंद्रकांत वाघमारे", d:"अतिरिक्त मुख्य कार्यकारी अधिकारी, जि.प. पुणे", p:"9922120000"},
-    {n:"बाळासाहेब दराडे", d:"उप मुख्य कार्यकारी अधिकारी (पाणी पुरवठा व स्वच्छता), जि.प. पुणे", p:"9766544676"}
+    {n:"सौ. शीतल तेली-उगले (भा.प्र.से.)", d:"विभागीय आयुक्त, पुणे विभाग", p:"9822876089", g:"div"},
+    {n:"नवल किशोर राम (भा.प्र.से.)", d:"आयुक्त, पुणे महानगरपालिका", p:"", g:"mnp"},
+    {n:"विजय सूर्यवंशी (भा.प्र.से.)", d:"आयुक्त, पिंपरी-चिंचवड महानगरपालिका", p:"", g:"mnp"},
+    {n:"जितेंद्र डुडी (भा.प्र.से.)", d:"जिल्हाधिकारी, पुणे", p:"9783802020", g:"pune"},
+    {n:"गजानन पाटील (भा.प्र.से.)", d:"मुख्य कार्यकारी अधिकारी (सीईओ), जि.प. पुणे", p:"9850736439", g:"pune"},
+    {n:"चंद्रकांत वाघमारे", d:"अतिरिक्त मुख्य कार्यकारी अधिकारी, जि.प. पुणे", p:"9922120000", g:"pune"},
+    {n:"बाळासाहेब दराडे", d:"उप मुख्य कार्यकारी अधिकारी (पाणी पुरवठा व स्वच्छता), जि.प. पुणे", p:"9766544676", g:"pune"},
+    {n:"संतोष पाटील", d:"जिल्हाधिकारी, सातारा", p:"7720073456", g:"satara"},
+    {n:"श्रीमती याशनी नागराजन (भा.प्र.से.)", d:"मुख्य कार्यकारी अधिकारी (सीईओ), जि.प. सातारा", p:"9958493779", g:"satara"},
+    {n:"कार्तिकेयन एस. (भा.प्र.से.)", d:"जिल्हाधिकारी, सोलापूर", p:"8610480624", g:"solapur"},
+    {n:"कुशल जैन (भा.प्र.से.)", d:"मुख्य कार्यकारी अधिकारी (सीईओ), जि.प. सोलापूर", p:"9741627497", g:"solapur"}
   ],
   policeAdmin: [
     {n:"अमितेश कुमार (भा.पो.से.)", d:"पोलीस आयुक्त, पुणे शहर", p:"9823133300"},
@@ -66,15 +66,15 @@ window.WARI_OFFICIALS = {
     {st:"चंदननगर", addr:"Nagar Road, Chandan Nagar, Pune - 411014", off:[{n:"श्री. निलेश बडख",p:"9923732999"},{n:"श्री. अमोल धस",p:"9823391766"}]}
   ],
   health: [
-    {n:"डॉ. भगवान पवार", d:"उपसंचालक आरोग्य सेवा, पुणे मंडळ", p:""},
-    {n:"डॉ. रामचंद्र हंकारे", d:"जिल्हा आरोग्य अधिकारी (DHO), जि.प. पुणे", p:"9422618468"},
-    {n:"डॉ. अंबादास देवमाने", d:"जिल्हा शल्य चिकित्सक, औंध, पुणे", p:"9850961920"},
-    {n:"डॉ. नीना बोराडे", d:"प्रमुख आरोग्य अधिकारी, पुणे महानगरपालिका", p:"9730481248"},
-    {n:"डॉ. लक्ष्मण गोफणे", d:"वैद्यकीय आरोग्य अधिकारी, पिंपरी-चिंचवड महानगरपालिका", p:"9922501317"},
-    {n:"डॉ. वर्षा डोईफोडे", d:"जिल्हा आरोग्य अधिकारी / शल्य चिकित्सक, सोलापूर जिल्हा", p:"9130675303"},
-    {n:"डॉ. सतीश कोपूरवाड", d:"जिल्हा आरोग्य अधिकारी (DHO), सोलापूर जिल्हा", p:"9892703745"},
-    {n:"डॉ. महेश खलिपे", d:"जिल्हा आरोग्य अधिकारी (DHO), सातारा जिल्हा", p:"9766378873"},
-    {n:"डॉ. राहुल जाधव", d:"प्रभारी जिल्हा शल्य चिकित्सक, सातारा जिल्हा", p:"9420494177"}
+    {n:"डॉ. भगवान पवार", d:"उपसंचालक आरोग्य सेवा, पुणे मंडळ", p:"", g:"div"},
+    {n:"डॉ. रामचंद्र हंकारे", d:"जिल्हा आरोग्य अधिकारी (DHO), जि.प. पुणे", p:"9422618468", g:"pune"},
+    {n:"डॉ. अंबादास देवमाने", d:"जिल्हा शल्य चिकित्सक, औंध, पुणे", p:"9850961920", g:"pune"},
+    {n:"डॉ. महेश खलिपे", d:"जिल्हा आरोग्य अधिकारी (DHO), सातारा जिल्हा", p:"9766378873", g:"satara"},
+    {n:"डॉ. राहुल जाधव", d:"प्रभारी जिल्हा शल्य चिकित्सक, सातारा जिल्हा", p:"9420494177", g:"satara"},
+    {n:"डॉ. वर्षा डोईफोडे", d:"जिल्हा आरोग्य अधिकारी / शल्य चिकित्सक, सोलापूर जिल्हा", p:"9130675303", g:"solapur"},
+    {n:"डॉ. सतीश कोपूरवाड", d:"जिल्हा आरोग्य अधिकारी (DHO), सोलापूर जिल्हा", p:"9892703745", g:"solapur"},
+    {n:"डॉ. नीना बोराडे", d:"प्रमुख आरोग्य अधिकारी, पुणे महानगरपालिका", p:"9730481248", g:"mnp"},
+    {n:"डॉ. लक्ष्मण गोफणे", d:"वैद्यकीय आरोग्य अधिकारी, पिंपरी-चिंचवड महानगरपालिका", p:"9922501317", g:"mnp"}
   ],
   healthState: [
     {n:"डॉ. नितीन अंबाडेकर", d:"संचालक, आरोग्य सेवा, मुंबई", p:""},
@@ -118,10 +118,9 @@ window.WARI_OFFICIALS = {
     var nums=s.off.map(function(o){return phones(o.p);}).join('');
     return '<div class="hrow"><div class="hname"><b>🚔 '+s.st+'</b><small>'+names+'<br>'+s.addr+'</small></div>'
       +'<div class="hnum">'+nums+'</div></div>';}).join('');}
-  function talukaRows(list){var out='',lastD='';
+  function talukaRows(list){var out='';
     function pill(lbl,p){return '<a href="tel:'+tel(p)+'" style="display:inline-flex;align-items:center;gap:5px;background:#159653;color:#fff;border-radius:999px;padding:6px 13px;font-size:13px;font-weight:800;text-decoration:none;white-space:nowrap">📞 '+lbl+' '+p+'</a>';}
     list.forEach(function(o){
-    if(o.dist&&o.dist!==lastD){out+='<div style="font-weight:900;font-size:12px;color:#9a3a00;margin:12px 0 5px;padding-left:2px">'+o.dist+'</div>';lastD=o.dist;}
     var parts=[];
     if(o.th) parts.push('तहसीलदार: '+o.th.n);
     if(o.bdo) parts.push('गटविकास: '+o.bdo.n);
@@ -137,16 +136,35 @@ window.WARI_OFFICIALS = {
       +'<div style="display:flex;flex-wrap:wrap;gap:7px">'+nums+'</div>'
       +'</div>';});
     return out;}
+  // Small sub-header inside a district block
+  function sub(t){return '<div style="font-weight:800;font-size:11.5px;color:#7c2d00;margin:9px 0 3px;padding-left:2px;opacity:.9">'+t+'</div>';}
+  function dhdr(t){return '<div class="hgrp" style="background:#f27405;color:#fff;border-radius:10px;padding:7px 11px;margin:14px 0 6px;font-size:14px">📍 '+t+'</div>';}
+  function byG(list,g){return list.filter(function(o){return o.g===g;});}
+  // Districts, each self-contained: revenue/admin officers + health officers + taluka officers.
+  var DISTRICTS=[['pune','पुणे जिल्हा'],['satara','सातारा जिल्हा'],['solapur','सोलापूर जिल्हा']];
+  function districtBlocks(O){
+    return DISTRICTS.map(function(d){
+      var a=byG(O.admin,d[0]), h=byG(O.health,d[0]), team=(d[0]==='pune')?O.healthTeam:[];
+      var t=O.taluka.filter(function(o){return o.dist===d[1];});
+      var html=dhdr(d[1]);
+      if(a.length) html+=sub('🏛 प्रशासन · Administration')+rows(a);
+      if(h.length) html+=sub('🩺 आरोग्य अधिकारी · Health Officers')+rows(h);
+      if(team.length) html+=sub('🏥 जिल्हा आरोग्य पथक · District Health Team')+rows(team);
+      if(t.length) html+=sub('👤 तालुका अधिकारी · Taluka Officers')+talukaRows(t);
+      return html;
+    }).join('');
+  }
   function render(){
     var O=window.WARI_OFFICIALS;
     var ab=document.getElementById('admin-body');
     var hb=document.getElementById('health-body');
     var pb=document.getElementById('police-body');
     var el=document.getElementById('officials-body');
-    var adminHtml='<div class="hgrp">🏛 महसूल व सामान्य प्रशासन · Administration</div>'+rows(O.admin)
-      +'<div class="hgrp">📍 तालुका अधिकारी · Taluka Officers</div>'+talukaRows(O.taluka);
-    var healthHtml='<div class="hgrp">🩺 आरोग्य अधिकारी · Health Officers</div>'+rows(O.health)
-      +'<div class="hgrp">🏥 जिल्हा आरोग्य पथक · District Health Team</div>'+rows(O.healthTeam)
+    // District-wise blocks (Pune / Satara / Solapur — each with its own numbers) go in the
+    // Administration container; the general/state/municipal officers stay separate below.
+    var adminHtml=districtBlocks(O)
+      +'<div class="hgrp">🏛 विभागीय व महानगरपालिका · Divisional & Municipal</div>'+rows(byG(O.admin,'div').concat(byG(O.admin,'mnp')));
+    var healthHtml='<div class="hgrp">🩺 विभागीय व महानगरपालिका आरोग्य · Divisional & Municipal Health</div>'+rows(byG(O.health,'div').concat(byG(O.health,'mnp')))
       +'<div class="hgrp">🏢 राज्यस्तरीय वरिष्ठ अधिकारी · State-level</div>'+rows(O.healthState);
     var policeHtml='<div class="hgrp">👮 पोलीस प्रशासन · Police Administration</div>'+rows(O.policeAdmin)
       +'<div class="hgrp">🚔 पोलीस स्टेशन — पालखी मार्ग ड्युटी ('+O.policeStations.length+' स्टेशन) · Police on Palkhi Duty</div>'+stationRows(O.policeStations);

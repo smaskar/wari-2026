@@ -1,4 +1,4 @@
-const CACHE_VERSION = 'wari2026-v159';
+const CACHE_VERSION = 'wari2026-v160';
 const TILE_CACHE = 'wari-tiles-v3'; // separate + persistent: survives app-version bumps so the
                                      // offline map tiles are NOT re-downloaded on each update.
                                      // (v3: purges v2, which may hold OSM "Access blocked" images
@@ -56,6 +56,7 @@ const APP_SHELL = [
   './wari-mukkams.js',
   './wari-officials.js',
   './wari-dignitaries.js',
+  './wari-clips.js',
   './wari-analytics.js',
   './assets/img/hirkani-booth.jpg',
   './assets/img/brand-deity-full.png',
