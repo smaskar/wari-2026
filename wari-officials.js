@@ -94,13 +94,17 @@ window.WARI_OFFICIALS = {
     {n:"डॉ. मोहन पांढरे", d:"फिरते पथक प्रमुख – जगद्गुरू श्री संत तुकाराम महाराज पालखी", p:"8308851175"}
   ],
   taluka: [
-    {t:"पुणे शहर", th:{n:"जयराज देशमुख", p:"9404395525"}},
-    {t:"खेड", th:{n:"प्रशांत बेडसे", p:"7588616500"}, bdo:{n:"विशाल शिंदे", p:"9766866408"}},
-    {t:"हवेली", th:{n:"तृप्ती कोलते", p:"9850719596"}, bdo:{n:"शेखर शेलार", p:"9545321111"}},
-    {t:"पुरंदर", th:{n:"विक्रम राजपूत", p:"9922317071"}, bdo:{n:"प्रद्योती श्रीश्रीमळ", p:"9420666191"}},
-    {t:"दौंड", th:{n:"अरुण शेलार", p:"9860943938"}, bdo:{n:"अरुण मरभळ", p:"9657395043"}},
-    {t:"बारामती", th:{n:"स्वप्नील रावडे", p:"7385764330"}, bdo:{n:"किशोर माने", p:"8600822765"}},
-    {t:"इंदापूर", th:{n:"जीवन बनसोडे", p:"9764007579"}, bdo:{n:"सचिन खुडे", p:"7721837755"}}
+    {t:"पुणे शहर", dist:"पुणे जिल्हा", th:{n:"जयराज देशमुख", p:"9404395525"}},
+    {t:"खेड (आळंदी)", dist:"पुणे जिल्हा", th:{n:"प्रशांत बेडसे", p:"7588616500"}, bdo:{n:"विशाल शिंदे", p:"9766866408"}, tho:{n:"डॉ. विलास माने", p:"8329699189"}},
+    {t:"हवेली", dist:"पुणे जिल्हा", th:{n:"तृप्ती कोलते", p:"9850719516"}, bdo:{n:"शेखर शेलार", p:"9545321111"}, tho:{n:"डॉ. सुरेश गोरे", p:"9975732073"}},
+    {t:"पुरंदर (सासवड)", dist:"पुणे जिल्हा", th:{n:"विक्रम राजपूत", p:"9922317071"}, bdo:{n:"प्रणोती श्रीश्रीमळ", p:"9420666191"}, tho:{n:"डॉ. विक्रम काळे", p:"9850491427"}},
+    {t:"दौंड", dist:"पुणे जिल्हा", th:{n:"अरुण शेलार", p:"9860943938"}, bdo:{n:"अरुण मरभळ", p:"9657395043"}, tho:{n:"डॉ. उज्ज्वला जाधव", p:"8308777692"}},
+    {t:"बारामती", dist:"पुणे जिल्हा", th:{n:"स्वप्नील रावडे", p:"7385764330"}, bdo:{n:"किशोर माने", p:"8600822765"}, tho:{n:"डॉ. मनोज खोमणे", p:"9822020595"}},
+    {t:"इंदापूर", dist:"पुणे जिल्हा", th:{n:"जीवन बनसोडे", p:"9764007579"}, bdo:{n:"सचिन खुडे", p:"7721837755"}, tho:{n:"डॉ. सुरेखा पोळ", p:"7588910789"}},
+    {t:"खंडाळा (लोणंद)", dist:"सातारा जिल्हा", th:{n:"सुहास थोरात", p:"7499822551"}, bdo:{n:"अनिल वाघमरे", p:"8275037148"}, tho:{n:"डॉ. प्रद्युम्न बुलाख", p:"9850633567"}},
+    {t:"फलटण", dist:"सातारा जिल्हा", th:{n:"अभिजित जाधव", p:"8208085476"}, bdo:{n:"अक्षय घावटे", p:"7821050063"}, tho:{n:"डॉ. संतोष कोंडके", p:"8007056401"}},
+    {t:"माळशिरस", dist:"सोलापूर जिल्हा", th:{n:"सुरेश शेजुळ", p:"9860373301"}, bdo:{n:"रघुनाथ पांढरे", p:"8208660065"}, tho:{n:"डॉ. भाऊसाहेब जानकर", p:""}},
+    {t:"पंढरपूर", dist:"सोलापूर जिल्हा", th:{n:"अनिल लंगोटे", p:"7387433462"}, bdo:{n:"अमोल जाधव", p:"8983160601"}, tho:{n:"डॉ. एकनाथ बोधले", p:"9420543098"}}
   ]
 };
 (function(){
@@ -114,13 +118,19 @@ window.WARI_OFFICIALS = {
     var nums=s.off.map(function(o){return phones(o.p);}).join('');
     return '<div class="hrow"><div class="hname"><b>🚔 '+s.st+'</b><small>'+names+'<br>'+s.addr+'</small></div>'
       +'<div class="hnum">'+nums+'</div></div>';}).join('');}
-  function talukaRows(list){return list.map(function(o){
+  function talukaRows(list){var out='',lastD='';list.forEach(function(o){
+    if(o.dist&&o.dist!==lastD){out+='<div style="font-weight:800;font-size:11px;color:#9a3a00;margin:8px 0 3px;padding-left:2px">'+o.dist+'</div>';lastD=o.dist;}
     var num='';
-    if(o.th) num+='<a href="tel:'+tel(o.th.p)+'">तह. '+o.th.p+'</a>';
-    if(o.bdo) num+='<a href="tel:'+tel(o.bdo.p)+'">ग.वि. '+o.bdo.p+'</a>';
-    var sub=(o.th?('तहसीलदार: '+o.th.n):'')+(o.bdo?(' · गटविकास: '+o.bdo.n):'');
-    return '<div class="hrow"><div class="hname"><b>'+o.t+'</b><small>'+sub+'</small></div>'
-      +'<div class="hnum">'+num+'</div></div>';}).join('');}
+    if(o.th&&o.th.p) num+='<a href="tel:'+tel(o.th.p)+'">तह. '+o.th.p+'</a>';
+    if(o.bdo&&o.bdo.p) num+='<a href="tel:'+tel(o.bdo.p)+'">ग.वि. '+o.bdo.p+'</a>';
+    if(o.tho&&o.tho.p) num+='<a href="tel:'+tel(o.tho.p)+'">आ.अ. '+o.tho.p+'</a>';
+    var parts=[];
+    if(o.th) parts.push('तहसीलदार: '+o.th.n);
+    if(o.bdo) parts.push('गटविकास: '+o.bdo.n);
+    if(o.tho) parts.push('तालुका आरोग्य अ.: '+o.tho.n);
+    out+='<div class="hrow"><div class="hname"><b>'+o.t+'</b><small>'+parts.join(' · ')+'</small></div>'
+      +'<div class="hnum">'+num+'</div></div>';});
+    return out;}
   function render(){
     var O=window.WARI_OFFICIALS;
     var ab=document.getElementById('admin-body');

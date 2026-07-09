@@ -49,8 +49,8 @@ if(palkhiFilter!=='dnyaneshwar'&&tr.length)L.polyline(tr,{color:'#f4711f',weight
 // SC (उपकेंद्र) pins only at zoom>=13 — kept in counts/lists, hidden at route-level zoom
 const SC_MIN_ZOOM=13;let scVis=false;function isSC(p){return /sub-centre/i.test(p.type||'')}
 let zoomRedraw=false;map.on('zoomend',()=>{if((map.getZoom()>=SC_MIN_ZOOM)!==scVis){zoomRedraw=true;try{draw()}finally{zoomRedraw=false}}});
-function draw(){updateSubChips();scVis=map.getZoom()>=SC_MIN_ZOOM;routeLayer.clearLayers();layer.clearLayers();drawRoute();let pts=POINTS.filter(keep);document.getElementById('count').textContent=pts.length;pts.forEach(p=>{if(isSC(p)&&!scVis)return;return L.marker([p.lat,p.lng],{icon:L.divIcon({className:'',html:`<div class="pin ${W.cls(p)} pal-${p.palkhi}${p.live?' has-live':''}${W.multi(p)?' multi':''}${W.isApprox(p)?' approx':''}">${W.icon(p)}</div>`,iconSize:[30,30],iconAnchor:[15,15]})}).bindPopup(popup(p),{maxWidth:250}).addTo(layer)});if(!zoomRedraw&&pts.length&&!userLocation){map.fitBounds(L.latLngBounds(pts.map(p=>[p.lat,p.lng])).pad(.1));}}
-function showUser(lat,lng,acc){userLocation=[lat,lng];userLayer.clearLayers();L.circle([lat,lng],{radius:Math.max(acc||20,20),className:'accuracy'}).addTo(userLayer);L.marker([lat,lng],{icon:L.divIcon({className:'',html:'<div class="userpin"></div>',iconSize:[24,24],iconAnchor:[12,12]})}).bindPopup('आपण येथे आहात').addTo(userLayer).openPopup();document.getElementById('locStatus').textContent='माझे स्थान दिसत आहे';map.setView([lat,lng],16);setTimeout(()=>map.invalidateSize(true),120)}
+function draw(){updateSubChips();scVis=map.getZoom()>=SC_MIN_ZOOM;routeLayer.clearLayers();layer.clearLayers();drawRoute();let pts=POINTS.filter(keep);document.getElementById('count').textContent=pts.length;pts.forEach(p=>{if(isSC(p)&&!scVis)return;return L.marker([p.lat,p.lng],{icon:L.divIcon({className:'',html:`<div class="pin ${W.cls(p)} pal-${p.palkhi}${p.live?' has-live':''}${W.multi(p)?' multi':''}${W.isApprox(p)?' approx':''}">${W.icon(p)}</div>`,iconSize:[30,30],iconAnchor:[15,15]})}).bindPopup(popup(p),{maxWidth:250}).addTo(layer)});if(!zoomRedraw&&pts.length&&!userLocation){map.fitBounds(L.latLngBounds(pts.map(p=>[p.lat,p.lng])).pad(.1));}if(typeof renderNearSummaryM==='function')renderNearSummaryM();}
+function showUser(lat,lng,acc){userLocation=[lat,lng];userLayer.clearLayers();L.circle([lat,lng],{radius:Math.max(acc||20,20),className:'accuracy'}).addTo(userLayer);L.marker([lat,lng],{icon:L.divIcon({className:'',html:'<div class="userpin"></div>',iconSize:[24,24],iconAnchor:[12,12]})}).bindPopup('आपण येथे आहात').addTo(userLayer).openPopup();document.getElementById('locStatus').textContent='माझे स्थान दिसत आहे';map.setView([lat,lng],16);renderNearSummaryM();setTimeout(()=>map.invalidateSize(true),120)}
 function locateMe(){if(!navigator.geolocation){document.getElementById('locStatus').textContent='Location सुविधा उपलब्ध नाही';return;}document.getElementById('locStatus').textContent='GPS स्थान घेत आहोत…';navigator.geolocation.getCurrentPosition(pos=>showUser(pos.coords.latitude,pos.coords.longitude,pos.coords.accuracy),()=>{document.getElementById('locStatus').textContent='GPS permission द्या';},{enableHighAccuracy:true,timeout:15000,maximumAge:20000})}
 function setPalkhi(p,fromParent){silent=!!fromParent;palkhiFilter=p||'all';document.querySelectorAll('#palkhiChips .chip').forEach(x=>x.classList.toggle('active',x.dataset.palkhi===palkhiFilter));draw();notifyParent();silent=false}
 const SUBROWS=[['docsubChips','doc','doc',v=>docSub=v],['ambsubChips','ambulance','amb',v=>ambSub=v],['watsubChips','water','wat',v=>watSub=v],['haltsubChips','halt','halt',v=>haltSub=v]];
@@ -61,7 +61,7 @@ function setDocSub(s){if(s!=='all'&&!subCount('doc','doc',s))s='all';docSub=s;do
 function setAmbSub(s){if(s!=='all'&&!subCount('ambulance','amb',s))s='all';ambSub=s;document.querySelectorAll('#ambsubChips .chip').forEach(x=>x.classList.toggle('active',x.dataset.amb===s));draw()}
 function setWatSub(s){if(s!=='all'&&!subCount('water','wat',s))s='all';watSub=s;document.querySelectorAll('#watsubChips .chip').forEach(x=>x.classList.toggle('active',x.dataset.wat===s));draw()}
 function setHaltSub(s){if(s!=='all'&&!subCount('halt','halt',s))s='all';haltSub=s;document.querySelectorAll('#haltsubChips .chip').forEach(x=>x.classList.toggle('active',x.dataset.halt===s));draw()}
-function resetMap(fromParent){silent=!!fromParent;palkhiFilter='all';typeFilter='all';docSub='all';ambSub='all';watSub='all';haltSub='all';userLocation=null;
+function resetMap(fromParent){silent=!!fromParent;palkhiFilter='all';typeFilter='all';docSub='all';ambSub='all';watSub='all';haltSub='all';userLocation=null;mkRef=null;mkName='';if(typeof renderNearSummaryM==='function')renderNearSummaryM();
 SUBROWS.forEach(function(row){var el=document.getElementById(row[0]);if(!el)return;el.style.display='none';el.querySelectorAll('.chip').forEach(x=>x.classList.toggle('active',x.dataset[row[2]]==='all'))});
 document.querySelectorAll('#palkhiChips .chip').forEach(x=>x.classList.toggle('active',x.dataset.palkhi==='all'));document.querySelectorAll('#typeChips .chip').forEach(x=>x.classList.toggle('active',x.dataset.filter==='all'));draw();notifyParent();silent=false}
 document.querySelectorAll('#palkhiChips .chip').forEach(b=>b.addEventListener('click',()=>setPalkhi(b.dataset.palkhi,false)));
@@ -77,10 +77,52 @@ let h='<option value="">— मुक्काम निवडा (सर्व 
 window.WARI_MUKKAMS.forEach((m,i)=>{h+='<option value="'+i+'">'+(m.pal==='tukaram'?'तुका':'ज्ञा')+' · '+(m.d?m.d+' · ':'')+m.n+'</option>'});
 sel.innerHTML=h})();
 function gotoMukkam(v){if(mkLayer){map.removeLayer(mkLayer);mkLayer=null}
-if(v===''){resetMap(false);return}
+if(v===''){mkRef=null;mkName='';resetMap(false);renderNearSummaryM();return}
 let m=window.WARI_MUKKAMS[+v];if(!m)return;
 setPalkhi(m.pal);
+mkRef=[m.lat,m.lng];mkName=m.n||'';
 mkLayer=L.layerGroup().addTo(map);
-L.circle([m.lat,m.lng],{radius:500,color:'#d92b2b',weight:3,fillOpacity:.08}).addTo(mkLayer);
-map.setView([m.lat,m.lng],13);}
+L.circle([m.lat,m.lng],{radius:1000,color:'#d92b2b',weight:3,fillOpacity:.08}).addTo(mkLayer);
+map.setView([m.lat,m.lng],13);renderNearSummaryM();}
 draw();
+
+/* ---- Desktop-map parity: "इथून सर्व सेवा" nearest-of-each panel (mirrors app.js) ---- */
+var mkRef=null,mkName='';
+function refLocM(){return (typeof userLocation!=='undefined'&&userLocation)?userLocation:mkRef}
+function havM(a,b,c,d){var R=6371000,p=Math.PI/180,x=Math.sin((c-a)*p/2)**2+Math.cos(a*p)*Math.cos(c*p)*Math.sin((d-b)*p/2)**2;return 2*R*Math.asin(Math.sqrt(x))}
+function distM(p){var r=refLocM();return r?havM(r[0],r[1],p.lat,p.lng):null}
+function devM(x){return String(x).replace(/[0-9]/g,d=>'०१२३४५६७८९'[d])}
+function fdM(m){return m==null?'—':m<80?'अगदी जवळ':m<6000?'🚶 '+devM(Math.max(1,Math.round(m/75)))+' मि. चालत':devM((m/1000).toFixed(1))+' किमी'}
+var NEAR_CATS_M=[
+  {s:'रुग्णवाहिका',ic:'🚑',c:'#e52920',bg:'#ffe9e8',m:p=>p.type==='Ambulance'},
+  {s:'अतिदक्षता (ICU)',ic:'⛑',c:'#b51d18',bg:'#fdecec',m:p=>W.isICU(p)},
+  {s:'डॉक्टर / रुग्णालय',ic:'🩺',c:'#159653',bg:'#e9f8f0',m:p=>isDocCat(p)&&!W.isICU(p)},
+  {s:'पाणी',ic:'💧',c:'#2f8fcf',bg:'#e9f1ff',m:p=>W.hasWater(p)},
+  {s:'शौचालय',ic:'🚻',c:'#7c3aed',bg:'#f1eafe',m:p=>W.isToilet(p)},
+  {s:'हिरकणी कक्ष',ic:'🤱',c:'#e5399b',bg:'#fdeaf4',m:p=>W.hasHirkani(p)},
+  {s:'चरणसेवा',ic:'🙏',c:'#c2740a',bg:'#fff3dc',m:p=>W.isCharanseva(p)},
+  {s:'मुक्काम / विसावा',ic:'⛺',c:'#9b5b00',bg:'#fff3dc',m:p=>W.isHalt(p)},
+  {s:'पोलीस',ic:'🚔',c:'#1a2f6e',bg:'#e7ecfa',m:p=>W.isPolice(p)}
+];
+function nearestOfM(pred){let best=null,bd=Infinity;POINTS.forEach(p=>{if(!palkhiKeep(p)||!pred(p))return;let d=distM(p);if(d==null)return;if(d<bd){bd=d;best=p}});return best?{p:best,d:bd}:null}
+function focusNearM(i){let o=(window._nearM||[])[i];if(o)map.setView([o.p.lat,o.p.lng],16)}
+function renderNearSummaryM(){var el=document.getElementById('nearSummary');if(!el)return;
+  if(!refLocM()){el.innerHTML='';return;}
+  var where=(typeof userLocation!=='undefined'&&userLocation)?'तुमचे स्थान':('मुक्काम '+(mkName||'')),list=[],rows='';
+  NEAR_CATS_M.forEach(function(cat_){var n=nearestOfM(cat_.m);if(!n)return;var i=list.length;list.push(n);
+    var ph=firstPhone(n.p.call,n.p.mo,n.p.doctor,n.p.pilot);
+    var nm=(n.p.label||'').replace(/\s*\|\s*MH[\s\S]*$/i,'').trim();
+    rows+='<div style="background:#fffef9;border:1px solid #eadfce;border-left:7px solid '+cat_.c+';border-radius:12px;padding:8px 10px;display:flex;align-items:center;gap:9px;margin-bottom:7px">'
+      +'<div onclick="focusNearM('+i+')" style="display:flex;align-items:center;gap:9px;flex:1;min-width:0;cursor:pointer">'
+        +'<div style="width:34px;height:34px;flex:0 0 auto;border-radius:11px;background:'+cat_.bg+';display:flex;align-items:center;justify-content:center;font-size:18px">'+cat_.ic+'</div>'
+        +'<div style="flex:1;min-width:0"><div style="font-size:13px;font-weight:900;color:#23160d">'+cat_.s+'</div>'
+        +'<div style="font-size:11px;color:#6b5238;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+W.esc(nm)+'</div>'
+        +'<div style="font-size:10.5px;color:#9a3a00;font-weight:900;margin-top:1px">'+fdM(n.d)+'</div></div></div>'
+      +'<div style="display:flex;gap:5px;flex:0 0 auto">'
+        +(ph?'<a href="tel:'+phoneHref(ph)+'" aria-label="फोन" style="width:34px;height:34px;border-radius:10px;background:#159653;color:#fff;display:flex;align-items:center;justify-content:center;font-size:15px;text-decoration:none">📞</a>':'')
+        +'<a href="'+dir(n.p)+'" target="_blank" rel="noopener noreferrer" aria-label="दिशा" style="width:34px;height:34px;border-radius:10px;background:#2f6fd6;color:#fff;display:flex;align-items:center;justify-content:center;font-size:14px;text-decoration:none">🧭</a>'
+      +'</div></div>';
+  });
+  window._nearM=list;
+  el.innerHTML=list.length?('<div style="background:#f27405;border-radius:12px;padding:9px 11px;color:#fff;margin:2px 0 8px"><div style="font-size:14px;font-weight:900">📍 इथून सर्व सेवा</div><div style="font-size:11px;opacity:.92">'+W.esc(where)+' · प्रत्येक सेवेतील सर्वात जवळचे</div></div>'+rows):'';
+}

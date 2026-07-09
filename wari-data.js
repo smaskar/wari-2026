@@ -121,6 +121,8 @@ window.WariData=(function(){
       if(!/102|१०२/.test(t.mems||''))t.mems=(t.mems?t.mems+' ':'')+'102';
     });
     applyAmbContacts(pts);
+    // Attach DHO Medical Officer name + mobile to the matched facility pin (by exact label).
+    (window.WARI_DHO_MO||[]).forEach(function(e){var t=pts.find(p=>p.label===e.label);if(t&&!t.mo)t.mo=e.mo;});
     return pts;
   }
   return{NAMES,build,isHalt,hasAmb,hasDoc,hasHospital,hasHealth,hasWater,hasHirkani,isSatara,isPHC,isRuralHospital,isHBT,isPrivateHospital,hasDoctor,isEMS,isMO,isALS,isBLS,is102,is108,cls,icon,isToilet,isPolice,isCharanseva,isICU,isApprox,isVisava,services,multi,esc,escAttr,safeAsset,safeExternalUrl,tel,countContacts,uniqueCount,vehicleCount};

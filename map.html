@@ -21,6 +21,7 @@
         <button class="ptoggle" id="ptoggle" onclick="togglePanel()" aria-expanded="false">नियंत्रण ▾</button>
       </div>
       <div class="panel-body" id="panelBody">
+        <div id="nearSummary"></div>
         <div class="filter-title">नकाशा नियंत्रण</div>
         <div class="chips"><button class="chip loc-chip" onclick="locateMe()">📍 माझे स्थान दाखवा</button><button class="chip" onclick="resetMap(false)">🗺 सर्व points</button></div>
         <div class="filter-title">शोधा · Search</div><div class="chips"><input id="msearch" type="search" placeholder="गाव / वाहन क्र. / डॉक्टर / फोन…" style="width:100%;padding:8px;border-radius:10px;border:1.5px solid #eadfce;font-size:13px" oninput="setSearch(this.value)"></div>
@@ -102,6 +103,7 @@
   <script src="./wari-points-phc102.js"></script>
   <script src="./wari-points-mrsac.js"></script>
   <script src="./wari-points-icu.js"></script>
+  <script src="./wari-points-dho-mo.js"></script>
   <script src="./wari-points-visava.js"></script>
   <script src="./wari-points-mymaps.js"></script>
   <script src="./wari-points-memsbook.js"></script>
