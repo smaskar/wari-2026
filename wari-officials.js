@@ -118,18 +118,24 @@ window.WARI_OFFICIALS = {
     var nums=s.off.map(function(o){return phones(o.p);}).join('');
     return '<div class="hrow"><div class="hname"><b>🚔 '+s.st+'</b><small>'+names+'<br>'+s.addr+'</small></div>'
       +'<div class="hnum">'+nums+'</div></div>';}).join('');}
-  function talukaRows(list){var out='',lastD='';list.forEach(function(o){
-    if(o.dist&&o.dist!==lastD){out+='<div style="font-weight:800;font-size:11px;color:#9a3a00;margin:8px 0 3px;padding-left:2px">'+o.dist+'</div>';lastD=o.dist;}
-    var num='';
-    if(o.th&&o.th.p) num+='<a href="tel:'+tel(o.th.p)+'">तह. '+o.th.p+'</a>';
-    if(o.bdo&&o.bdo.p) num+='<a href="tel:'+tel(o.bdo.p)+'">ग.वि. '+o.bdo.p+'</a>';
-    if(o.tho&&o.tho.p) num+='<a href="tel:'+tel(o.tho.p)+'">आ.अ. '+o.tho.p+'</a>';
+  function talukaRows(list){var out='',lastD='';
+    function pill(lbl,p){return '<a href="tel:'+tel(p)+'" style="display:inline-flex;align-items:center;gap:5px;background:#159653;color:#fff;border-radius:999px;padding:6px 13px;font-size:13px;font-weight:800;text-decoration:none;white-space:nowrap">📞 '+lbl+' '+p+'</a>';}
+    list.forEach(function(o){
+    if(o.dist&&o.dist!==lastD){out+='<div style="font-weight:900;font-size:12px;color:#9a3a00;margin:12px 0 5px;padding-left:2px">'+o.dist+'</div>';lastD=o.dist;}
     var parts=[];
     if(o.th) parts.push('तहसीलदार: '+o.th.n);
     if(o.bdo) parts.push('गटविकास: '+o.bdo.n);
     if(o.tho) parts.push('तालुका आरोग्य अ.: '+o.tho.n);
-    out+='<div class="hrow"><div class="hname"><b>'+o.t+'</b><small>'+parts.join(' · ')+'</small></div>'
-      +'<div class="hnum">'+num+'</div></div>';});
+    var nums='';
+    if(o.th&&o.th.p) nums+=pill('तह.',o.th.p);
+    if(o.bdo&&o.bdo.p) nums+=pill('ग.वि.',o.bdo.p);
+    if(o.tho&&o.tho.p) nums+=pill('आ.अ.',o.tho.p);
+    // Full-width block: taluka name, officer names on ONE line, then the call buttons in a row.
+    out+='<div style="padding:9px 2px;border-bottom:1px solid #f0e6d4">'
+      +'<div style="font-weight:900;font-size:15px;color:#23160d;margin-bottom:2px">'+o.t+'</div>'
+      +'<div style="font-size:12px;color:#6b5238;line-height:1.5;margin-bottom:8px">'+parts.join(' · ')+'</div>'
+      +'<div style="display:flex;flex-wrap:wrap;gap:7px">'+nums+'</div>'
+      +'</div>';});
     return out;}
   function render(){
     var O=window.WARI_OFFICIALS;
