@@ -1,15 +1,18 @@
 /* Wari usage analytics — anonymous, self-hosted, offline-safe.
-   Sends ONE tiny "app opened" ping per device per day to /api/hit on our OWN server
-   (same-origin → no CSP change, no third party, no personal data, no IP in the hit log).
-   - random local install id (localStorage) → lets the server count UNIQUE users
-   - throttled to once/calendar-day/device → clean daily-active + unique-user metrics
-   - offline: the ping is queued in localStorage and flushed on the next online event/open
-   - fully wrapped in try/catch and fire-and-forget → can NEVER break the app or block offline use.
-   Endpoint contract (server just logs these query params and returns 204):
-     GET /api/hit?u=<installId>&d=<YYYY-MM-DD>&v=<appVersion> */
+   Sends ONE beacon on EVERY app open to /api/hit on our OWN server (same-origin → no CSP change,
+   no third party). Anonymous: a random local install id (for unique-user counts) + non-identifying
+   device context. NO name, NO IP (the server is told not to log IP), NO precise location.
+   Captured per open:
+     u   = random install id (unique users)          t    = open time (epoch ms, client)
+     s   = screen WxH (device size)                   tz   = timezone offset minutes (+330 = IST)
+     lang= browser language                           pwa  = 1 if launched as installed app
+     dpr = device pixel ratio                         v    = app version
+   The browser + device + OS come from the User-Agent, which the server logs itself.
+   Offline: every open is queued in localStorage and flushed when back online (open time preserved).
+   Fully try/catch'd + fire-and-forget → can NEVER break the app or block offline use. */
 (function () {
   try {
-    var UID = 'wariUid', QUEUE = 'wariHitQueue', LAST = 'wariHitLast', VER = '156';
+    var UID = 'wariUid', QUEUE = 'wariHitQueue', VER = '157';
     function store(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
     function put(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
     function uid() {
@@ -17,36 +20,45 @@
       if (!u) { u = Date.now().toString(36) + Math.random().toString(36).slice(2, 10); put(UID, u); }
       return u;
     }
-    function today() {
-      var d = new Date();
-      return d.getFullYear() + '-' + ('0' + (d.getMonth() + 1)).slice(-2) + '-' + ('0' + d.getDate()).slice(-2);
+    function pwa() {
+      try { return ((window.matchMedia && matchMedia('(display-mode: standalone)').matches) || navigator.standalone) ? 1 : 0; }
+      catch (e) { return 0; }
     }
-    function url(hit) {
-      return '/api/hit?u=' + encodeURIComponent(hit.u) + '&d=' + encodeURIComponent(hit.d) +
-             '&v=' + encodeURIComponent(hit.v || VER);
+    function url(h) {
+      return '/api/hit?u=' + encodeURIComponent(h.u) + '&t=' + h.t +
+             '&s=' + encodeURIComponent(h.s) + '&tz=' + h.tz +
+             '&lang=' + encodeURIComponent(h.lang) + '&pwa=' + h.pwa +
+             '&dpr=' + h.dpr + '&v=' + encodeURIComponent(h.v);
     }
-    function send(hit) {
+    function send(h) {
       try {
-        var u = url(hit);
+        var u = url(h);
         if (navigator.sendBeacon) { navigator.sendBeacon(u); return true; }
         fetch(u, { method: 'GET', keepalive: true, cache: 'no-store', mode: 'no-cors' }).catch(function () {});
         return true;
       } catch (e) { return false; }
     }
-    function readQueue() { try { return JSON.parse(store(QUEUE) || '[]'); } catch (e) { return []; } }
+    function readQ() { try { return JSON.parse(store(QUEUE) || '[]'); } catch (e) { return []; } }
     function flush() {
       if (!navigator.onLine) return;
-      var q = readQueue(); if (!q.length) return;
-      q.forEach(function (hit) { send(hit); });   // fire-and-forget; keep last 200 only if any remain
+      var q = readQ(); if (!q.length) return;
+      q.forEach(function (h) { send(h); });
       put(QUEUE, '[]');
     }
-    function record() {
-      var d = today();
-      if (store(LAST) === d) return;               // already counted this device today
-      var hit = { u: uid(), d: d, v: VER };
-      put(LAST, d);
-      if (navigator.onLine && send(hit)) return;
-      var q = readQueue(); q.push(hit); put(QUEUE, JSON.stringify(q.slice(-200)));  // offline → queue
+    function hit() {
+      var sw = 0, sh = 0, dpr = 1;
+      try { sw = screen.width; sh = screen.height; dpr = window.devicePixelRatio || 1; } catch (e) {}
+      return {
+        u: uid(), t: Date.now(), s: sw + 'x' + sh,
+        tz: (new Date().getTimezoneOffset() * -1),
+        lang: (navigator.language || ''), pwa: pwa(),
+        dpr: (Math.round(dpr * 100) / 100), v: VER
+      };
+    }
+    function record() {                              // EVERY open (no throttle)
+      var h = hit();
+      if (navigator.onLine && send(h)) return;
+      var q = readQ(); q.push(h); put(QUEUE, JSON.stringify(q.slice(-300)));   // offline → queue
     }
     window.addEventListener('online', flush);
     function go() { flush(); record(); }

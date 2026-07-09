@@ -29,7 +29,13 @@
       if(navigator.onLine)upd();
       window.addEventListener('online',upd);
     }).catch(function(){});
-    navigator.serviceWorker.ready.then(function(){setOff('✓ ऑफलाइन तयार');}).catch(function(){});
+    navigator.serviceWorker.ready.then(function(){setOff('✓ ऑफलाइन तयार');
+      /* Network-first for pages/data is handled in sw.js; here we also proactively re-download
+         the FULL app + data in the background whenever online, so the offline copy stays fresh
+         (not just from the first install). Fire-and-forget. */
+      function bgSync(){try{if(navigator.onLine&&navigator.serviceWorker.controller)navigator.serviceWorker.controller.postMessage({type:'SYNC_NOW'});}catch(e){}}
+      bgSync();window.addEventListener('online',bgSync);
+    }).catch(function(){});
   })();
   </script>
 </head>

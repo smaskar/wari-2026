@@ -1,4 +1,4 @@
-const CACHE_VERSION = 'wari2026-v156';
+const CACHE_VERSION = 'wari2026-v157';
 const TILE_CACHE = 'wari-tiles-v2'; // separate + persistent: survives app-version bumps so the
                                      // offline map tiles are NOT re-downloaded on each update.
                                      // (v2: dropped OSM fallback that could cache "403 blocked" images.)
