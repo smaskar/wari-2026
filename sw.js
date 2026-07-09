@@ -1,7 +1,8 @@
-const CACHE_VERSION = 'wari2026-v157';
-const TILE_CACHE = 'wari-tiles-v2'; // separate + persistent: survives app-version bumps so the
+const CACHE_VERSION = 'wari2026-v158';
+const TILE_CACHE = 'wari-tiles-v3'; // separate + persistent: survives app-version bumps so the
                                      // offline map tiles are NOT re-downloaded on each update.
-                                     // (v2: dropped OSM fallback that could cache "403 blocked" images.)
+                                     // (v3: purges v2, which may hold OSM "Access blocked" images
+                                     //  cached during the old OSM-fallback era. Now local-only.)
 const APP_SHELL = [
   './',
   './index.html',
@@ -106,20 +107,14 @@ function isLocalTile(url) {
 function isOsmTile(url) {
   return url.hostname.includes('tile.openstreetmap.org');
 }
-// Resolve a tile: bundled local file first (works fully offline / on CDN-blocked govt networks).
-// If a tile isn't bundled (off-corridor / wide desktop view) AND we're online, fall back to OSM —
-// but with a NORMAL (CORS) fetch and a strict r.ok check, so OSM's "403 Access blocked" response
-// is discarded (blank tile), never cached. (The earlier bug used no-cors → opaque → 403 cached.)
+// Resolve a tile from the BUNDLED local set ONLY — never OSM. This makes the app fully
+// self-contained (works on CDN-blocked govt networks and offline) and, critically, guarantees
+// OSM's "Access blocked" tile can NEVER appear (OSM sometimes serves that as HTTP 200, so an
+// r.ok check can't filter it — the only safe answer is to not call OSM at runtime at all).
+// A tile with no local file renders blank (transparent errorTileUrl); the map's zoom/bounds are
+// constrained to the bundled area so users don't pan into blank space.
 async function fetchTile(request) {
   const url = new URL(request.url);
-  if (isLocalTile(url)) {
-    try { const r = await fetch(request); if (r && r.ok) return r; } catch (e) {}
-    const m = url.pathname.match(/\/assets\/tiles\/(\d+)\/(\d+)\/(\d+)\.png$/);
-    if (m) {
-      try { const r = await fetch('https://tile.openstreetmap.org/' + m[1] + '/' + m[2] + '/' + m[3] + '.png'); if (r && r.ok) return r; } catch (e) {}
-    }
-    return null;
-  }
   try { const r = await fetch(request); if (r && r.ok) return r; } catch (e) {}
   return null;
 }
