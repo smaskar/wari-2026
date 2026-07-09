@@ -4,7 +4,7 @@ let POINTS=W.build(),map,userMarker=null,accCircle=null,markers=[],routeLayer=nu
 function $(id){return document.getElementById(id)}function tick(){$('clock').textContent=new Date().toLocaleTimeString('mr-IN',{hour:'numeric',minute:'2-digit',hour12:true})}tick();setInterval(tick,3e4);
 document.addEventListener('click',e=>{const a=e.target.closest?e.target.closest('a[href^="tel:"]'):null;if(a&&window.top!==window.self){e.preventDefault();try{window.top.location.href=a.getAttribute('href')}catch(_){window.location.href=a.getAttribute('href')}}});
 function closeHelpline(){let h=$('helpline');if(h)h.open=false}document.addEventListener('click',e=>{let h=$('helpline');if(h&&h.open&&!h.contains(e.target))h.open=false},true);
-function initMap(){if(map)return;if(!window.L){$('map').innerHTML='<div style="padding:18px;font-weight:900">नकाशा ऑफलाइन उपलब्ध नाही. मदत केंद्रांची यादी खाली उपलब्ध आहे.</div>';return}map=L.map('map',{zoomControl:false}).setView([18.41936,74.02765],10);L.control.zoom({position:'bottomleft'}).addTo(map);L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'&copy; OpenStreetMap'}).addTo(map);map.on('popupopen',()=>setTimeout(initLive,60));map.on('zoomend',()=>{if((map.getZoom()>=SC_MIN_ZOOM)!==scVis)draw(drawnPts)})}
+function initMap(){if(map)return;if(!window.L){$('map').innerHTML='<div style="padding:18px;font-weight:900">नकाशा ऑफलाइन उपलब्ध नाही. मदत केंद्रांची यादी खाली उपलब्ध आहे.</div>';return}map=L.map('map',{zoomControl:false}).setView([18.41936,74.02765],10);L.control.zoom({position:'bottomleft'}).addTo(map);L.tileLayer('./assets/tiles/{z}/{x}/{y}.png',{maxZoom:18,maxNativeZoom:14,attribution:'&copy; OpenStreetMap',errorTileUrl:'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg=='}).addTo(map);map.on('popupopen',()=>setTimeout(initLive,60));map.on('zoomend',()=>{if((map.getZoom()>=SC_MIN_ZOOM)!==scVis)draw(drawnPts)})}
 function hav(a,b,c,d){let R=6371000,r=x=>x*Math.PI/180,dl=r(c-a),dn=r(d-b),q=Math.sin(dl/2)**2+Math.cos(r(a))*Math.cos(r(c))*Math.sin(dn/2)**2;return 2*R*Math.atan2(Math.sqrt(q),Math.sqrt(1-q))}function dev(x){return String(x).replace(/[0-9]/g,d=>'०१२३४५६७८९'[d])}function fd(m){return m==null?'—':m<80?'अगदी जवळ':m<6000?'🚶 '+dev(Math.max(1,Math.round(m/75)))+' मि. चालत':dev((m/1000).toFixed(1))+' किमी'}function refLoc(){return userLocation||mukkamRef}function dist(p){let r=refLoc();return r?hav(r[0],r[1],p.lat,p.lng):null}function dir(p){return`https://www.google.com/maps/dir/?api=1&destination=${p.lat},${p.lng}`}
 const HIRKANI_PHOTO='./assets/img/hirkani-booth.jpg',CHARANSEVA_PHOTO='./assets/img/emblem-crop.png',HIRKANI_VIDEO='./assets/video/hirkani-1.mp4',HIRKANI_VIDEO_LABEL='हिरकणी कक्ष – व्हिडिओ पहा';
 function liveBlock(url){url=W.safeExternalUrl(url);if(!url)return'';let head='<div class="live-head">🔴 थेट प्रक्षेपण · LIVE</div>';if(/youtube\.com|youtu\.be/.test(url)){let id=(url.match(/(?:[?&]v=|youtu\.be\/|\/live\/|\/embed\/)([\w-]{6,})/)||[])[1];if(!id)return'';let e='https://www.youtube.com/embed/'+id+'?autoplay=1&mute=1&playsinline=1';return`<div class="live-wrap">${head}<iframe class="live-embed" src="${W.escAttr(e)}" allow="autoplay; encrypted-media; fullscreen; picture-in-picture" allowfullscreen loading="lazy" referrerpolicy="strict-origin-when-cross-origin"></iframe></div>`;}if(!/\.m3u8(?:\?|$)/i.test(url))return'';return`<div class="live-wrap">${head}<video class="live-embed" data-hls="${W.escAttr(url)}" controls autoplay muted playsinline></video><div class="live-note">थेट फीड लोड होत नसल्यास पुन्हा प्रयत्न करा</div></div>`;}
@@ -202,7 +202,7 @@ loadWeather(18.5204,73.8567,'पुणे');
    usable offline. Runs once, only when online, in the background via the service worker
    (which stores them in a persistent cache that survives app updates). ~20 MB. */
 (function(){
-  var FLAG='wariTilesPrecached_v2';
+  var FLAG='wariTilesPrecached_v3';
   function lon2t(lon,z){return Math.floor((lon+180)/360*Math.pow(2,z));}
   function lat2t(lat,z){var r=lat*Math.PI/180;return Math.floor((1-Math.log(Math.tan(r)+1/Math.cos(r))/Math.PI)/2*Math.pow(2,z));}
   function buildTileList(){
@@ -234,7 +234,9 @@ loadWeather(18.5204,73.8567,'पुणे');
       });
     });
     var keys=Object.keys(set).slice(0,cap);
-    return keys.map(function(k){return 'https://tile.openstreetmap.org/'+k+'.png';});
+    // Local bundled tiles (served by our own server) — absolute URLs so the SW caches them
+    // under a stable key. SW falls back to OSM only if a local tile is genuinely missing.
+    return keys.map(function(k){return new URL('./assets/tiles/'+k+'.png',location.href).href;});
   }
   function setStatus(t){var e=document.getElementById('offlineStatus');if(e)e.textContent=t;}
   if('serviceWorker' in navigator){

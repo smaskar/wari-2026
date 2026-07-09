@@ -1,6 +1,7 @@
-const CACHE_VERSION = 'wari2026-v153';
-const TILE_CACHE = 'wari-tiles-v1'; // separate + persistent: survives app-version bumps so the
-                                     // ~20 MB of offline map tiles is NOT re-downloaded on each update.
+const CACHE_VERSION = 'wari2026-v155';
+const TILE_CACHE = 'wari-tiles-v2'; // separate + persistent: survives app-version bumps so the
+                                     // offline map tiles are NOT re-downloaded on each update.
+                                     // (v2: dropped OSM fallback that could cache "403 blocked" images.)
 const APP_SHELL = [
   './',
   './index.html',
@@ -84,9 +85,10 @@ self.addEventListener('install', event => {
 });
 
 self.addEventListener('activate', event => {
-  // Only drop OLD app-shell caches (wari2026-vNNN). Never touch TILE_CACHE — keep the offline map.
+  // Drop OLD app-shell caches (wari2026-vNNN) and STALE tile caches (wari-tiles-*, e.g. the
+  // poisoned v1). Keep only the current TILE_CACHE so the offline map isn't re-downloaded.
   event.waitUntil(caches.keys().then(keys => Promise.all(
-    keys.filter(k => k.startsWith('wari2026-v') && k !== CACHE_VERSION).map(k => caches.delete(k))
+    keys.filter(k => (k.startsWith('wari2026-v') && k !== CACHE_VERSION) || (k.startsWith('wari-tiles-') && k !== TILE_CACHE)).map(k => caches.delete(k))
   )).then(() => self.clients.claim()));
 });
 
@@ -94,8 +96,31 @@ function isDataOrAppRequest(url) {
   return url.pathname.endsWith('.html') || url.pathname.endsWith('.js') || url.pathname.endsWith('.css') || url.pathname.endsWith('.webmanifest') || url.pathname.includes('wari-points-') || url.pathname.includes('wari-data');
 }
 
-function isTile(url) {
+// Map tiles are now BUNDLED locally at ./assets/tiles/{z}/{x}/{y}.png (served by our own
+// server — no external CDN, works on locked-down govt networks). A tile request is either a
+// local bundled tile or (legacy / off-corridor) a direct OSM URL.
+function isLocalTile(url) {
+  return url.origin === location.origin && url.pathname.includes('/assets/tiles/');
+}
+function isOsmTile(url) {
   return url.hostname.includes('tile.openstreetmap.org');
+}
+// Resolve a tile: bundled local file first (works fully offline / on CDN-blocked govt networks).
+// If a tile isn't bundled (off-corridor / wide desktop view) AND we're online, fall back to OSM —
+// but with a NORMAL (CORS) fetch and a strict r.ok check, so OSM's "403 Access blocked" response
+// is discarded (blank tile), never cached. (The earlier bug used no-cors → opaque → 403 cached.)
+async function fetchTile(request) {
+  const url = new URL(request.url);
+  if (isLocalTile(url)) {
+    try { const r = await fetch(request); if (r && r.ok) return r; } catch (e) {}
+    const m = url.pathname.match(/\/assets\/tiles\/(\d+)\/(\d+)\/(\d+)\.png$/);
+    if (m) {
+      try { const r = await fetch('https://tile.openstreetmap.org/' + m[1] + '/' + m[2] + '/' + m[3] + '.png'); if (r && r.ok) return r; } catch (e) {}
+    }
+    return null;
+  }
+  try { const r = await fetch(request); if (r && r.ok) return r; } catch (e) {}
+  return null;
 }
 
 async function networkFirst(request) {
@@ -109,25 +134,21 @@ async function networkFirst(request) {
   }
 }
 
-// Tiles never change → cache-first (saves data), fill from network on a miss.
+// Tiles never change → cache-first (saves data + works offline), fill on a miss.
 async function tileCacheFirst(request) {
   const cache = await caches.open(TILE_CACHE);
   const cached = await cache.match(request);
   if (cached) return cached;
-  try {
-    const response = await fetch(request);
-    if (response && (response.ok || response.type === 'opaque')) cache.put(request, response.clone());
-    return response;
-  } catch (e) {
-    return cached || Response.error();
-  }
+  const response = await fetchTile(request);
+  if (response) { cache.put(request, response.clone()); return response; }
+  return cached || Response.error();
 }
 
 self.addEventListener('fetch', event => {
   const request = event.request;
   if (request.method !== 'GET') return;
   const url = new URL(request.url);
-  if (isTile(url)) { event.respondWith(tileCacheFirst(request)); return; }
+  if (isLocalTile(url) || isOsmTile(url)) { event.respondWith(tileCacheFirst(request)); return; }
   if (request.mode === 'navigate') { event.respondWith(networkFirst(request)); return; }
   if (url.origin === location.origin && isDataOrAppRequest(url)) { event.respondWith(networkFirst(request)); return; }
 });
@@ -142,8 +163,8 @@ async function precacheTiles(urls) {
       const u = queue.shift();
       try {
         if (!(await cache.match(u))) {
-          const r = await fetch(u, { mode: 'no-cors' });
-          if (r && (r.ok || r.type === 'opaque')) await cache.put(u, r.clone());
+          const r = await fetchTile(new Request(u));
+          if (r) await cache.put(u, r.clone());
         }
       } catch (e) { /* skip failed tile */ }
       done++;

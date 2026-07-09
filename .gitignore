@@ -1,2 +1,5 @@
 CLAUDE_CODE_BRIEF.md
 .claude/
+
+# Bundled offline map tiles — shipped in deploy zip, not the repo (SW falls back to OSM)
+assets/tiles/
