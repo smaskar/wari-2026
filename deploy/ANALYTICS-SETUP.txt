@@ -29,8 +29,9 @@ STEP 1 — Add the log format  (inside the  http { }  block)
 Inside  http { ... }  (near the other log_format / access_log lines),
 paste this ONE directive. NOTE: deliberately NO $remote_addr = no IP logged.
 
-log_format wari_hit '$time_iso8601 uid=$arg_u t=$arg_t scr=$arg_s tz=$arg_tz '
-                    'lang=$arg_lang pwa=$arg_pwa dpr=$arg_dpr ver=$arg_v ua="$http_user_agent"';
+log_format wari_hit '$time_iso8601 uid=$arg_u t=$arg_t e=$arg_e k=$arg_k near=$arg_near '
+                    'scr=$arg_s tz=$arg_tz lang=$arg_lang pwa=$arg_pwa dpr=$arg_dpr '
+                    'ver=$arg_v ua="$http_user_agent"';
 
 ------------------------------------------------------------------------
 STEP 2 — Add the endpoint  (inside the  server { }  block for the site)
@@ -101,8 +102,9 @@ use the zcat command above to include rotated (.gz) history.
 QUICK COPY BLOCK (both edits together)
 ------------------------------------------------------------------------
 # --- put in http { } (nginx.conf) ---
-log_format wari_hit '$time_iso8601 uid=$arg_u t=$arg_t scr=$arg_s tz=$arg_tz '
-                    'lang=$arg_lang pwa=$arg_pwa dpr=$arg_dpr ver=$arg_v ua="$http_user_agent"';
+log_format wari_hit '$time_iso8601 uid=$arg_u t=$arg_t e=$arg_e k=$arg_k near=$arg_near '
+                    'scr=$arg_s tz=$arg_tz lang=$arg_lang pwa=$arg_pwa dpr=$arg_dpr '
+                    'ver=$arg_v ua="$http_user_agent"';
 
 # --- put in server { } (site config) ---
 location = /api/hit {
@@ -113,4 +115,25 @@ location = /api/hit {
 
 # --- then ---
 sudo nginx -t && sudo systemctl reload nginx
+
+------------------------------------------------------------------------
+STEP 7 - VISUAL DASHBOARD (charts, bot-filtered)
+------------------------------------------------------------------------
+Copy wari-dashboard.py to the box (needs python3, already on Ubuntu). Run:
+  python3 wari-dashboard.py /var/log/nginx/wari-hits.log -o /root/wari-dashboard.html
+Open the generated wari-dashboard.html in a browser. It shows:
+  total opens, unique users, PHONE-CALL taps (108/112/102/facility-contact) +
+  call rate, usage by AREA (nearest mukkam), daily-active users, opens-by-hour,
+  device/OS, browser. Bots/monitoring are auto-filtered.
+Include rotated history:
+  python3 wari-dashboard.py '/var/log/nginx/wari-hits.log*' -o /root/wari-dashboard.html
+Auto-refresh every 15 min (cron):
+  */15 * * * * /usr/bin/python3 /root/wari-dashboard.py /var/log/nginx/wari-hits.log -o /root/wari-dashboard.html
+Keep wari-dashboard.html OFF the public web root, or behind auth.
+
+WHAT THE NEW FIELDS MEAN
+  e=call k=108|112|102|contact  -> user tapped a phone number (real "did it help")
+  e=loc  near=<mukkam name>     -> coarse area (nearest halt), only when user uses
+                                   "near me"/mukkam; NO precise GPS, NO coordinates
+  (open beacons have e= empty)
 ========================================================================

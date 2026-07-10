@@ -25,13 +25,18 @@
   </div>
 
   <h2>१. आम्ही काय गोळा करतो · What we collect</h2>
-  <p>अ‍ॅप उघडल्यावर, वापर मोजण्यासाठी एक <b>निनावी (anonymous)</b> संकेत आमच्या स्वतःच्या सर्व्हरवर पाठवला जातो. त्यात असते:</p>
+  <p>वापर मोजण्यासाठी एक <b>निनावी (anonymous)</b> संकेत आमच्या स्वतःच्या सर्व्हरवर पाठवला जातो. त्यात असते:</p>
   <ul>
     <li>यादृच्छिक इन्स्टॉल-आयडी (random install id) — व्यक्तीशी जोडलेला नाही</li>
     <li>अ‍ॅप उघडल्याची वेळ · स्क्रीन आकार · टाइमझोन · भाषा · अ‍ॅप/ब्राउझर प्रकार · डिव्हाइस/ब्राउझर (User-Agent) · अ‍ॅप आवृत्ती</li>
+    <li><b>वापराची कृती</b> — उदा. कोणत्या प्रकारचा फोन नंबर दाबला (१०८ / ११२ / १०२ / केंद्र-संपर्क). प्रत्यक्ष नंबर किंवा तुम्ही कोणाला कॉल केला हे साठवले जात नाही.</li>
+    <li><b>ढोबळ भाग (approximate area)</b> — फक्त तुम्ही “जवळ मदत” किंवा मुक्काम वापरल्यास, <b>जवळच्या मुक्कामाचे नाव</b> (उदा. “सासवड”). अचूक GPS स्थान किंवा अक्षांश/रेखांश साठवले जात नाहीत.</li>
   </ul>
-  <p class="en">On app open, an <b>anonymous</b> usage ping is sent to our own server: a random install id (not linked to any person),
-  open time, screen size, timezone, language, app-vs-browser flag, device/browser (User-Agent) and app version.</p>
+  <p class="en">An <b>anonymous</b> usage ping is sent to our own server: a random install id (not linked to any person),
+  open time, screen size, timezone, language, app-vs-browser flag, device/browser (User-Agent), app version,
+  <b>interaction events</b> (e.g. which <i>type</i> of number was tapped — 108/112/102/facility-contact; not the actual number
+  or who you called), and a <b>coarse area</b> (the nearest halt/town name, e.g. “Saswad”) ONLY when you use “near me” or a
+  mukkam — never precise GPS coordinates.</p>
 
   <h2>२. आम्ही काय गोळा करत नाही · What we do NOT collect</h2>
   <ul>
@@ -41,10 +46,12 @@
   </ul>
 
   <h2>३. स्थान (Location) · कसे वापरले जाते</h2>
-  <p>“माझ्या जवळ मदत शोधा” वापरताना अ‍ॅप तुमचे स्थान <b>फक्त तुमच्या फोनवरच</b> वापरते — जवळची मदत केंद्रे दाखवण्यासाठी.
-  हे स्थान सर्व्हरवर पाठवले किंवा साठवले जात नाही. परवानगी नाकारल्यास अ‍ॅप पूर्णपणे वापरता येते.</p>
-  <p class="en">When you use “find help near me”, your location is used <b>only on your device</b> to show nearby help; it is never sent
-  to or stored on any server. The app works fully even if you deny location permission.</p>
+  <p>“माझ्या जवळ मदत शोधा” वापरताना अ‍ॅप तुमचे अचूक स्थान <b>फक्त तुमच्या फोनवरच</b> वापरते — जवळची मदत केंद्रे दाखवण्यासाठी.
+  अचूक स्थान (अक्षांश/रेखांश) कधीही सर्व्हरवर पाठवले किंवा साठवले जात नाही. फक्त एकत्रित आकडेवारीसाठी
+  <b>जवळच्या मुक्कामाचे नाव</b> (ढोबळ भाग) नोंदवले जाते. परवानगी नाकारल्यास अ‍ॅप पूर्णपणे वापरता येते.</p>
+  <p class="en">When you use “find help near me”, your precise location is used <b>only on your device</b> to show nearby help.
+  Precise coordinates are <b>never</b> sent to or stored on any server — only the <b>nearest halt/town name</b> (a coarse area) is
+  recorded for aggregate statistics. The app works fully even if you deny location permission.</p>
 
   <h2>४. साठवण व सुरक्षा · Storage &amp; security</h2>
   <p>निनावी वापर-संकेत <code>wari.maharashtra.gov.in</code> या शासनाच्या सर्व्हरवर (भारतात) एकत्रित आकडेवारीसाठी नोंदवले जातात.
