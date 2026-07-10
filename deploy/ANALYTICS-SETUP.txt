@@ -134,7 +134,7 @@ Keep wari-dashboard.html OFF the public web root, or behind auth.
 PRIVATE DASHBOARD URL WITH LOGIN (recommended):
   See nginx-dashboard-auth.conf — serves the dashboard at
     https://wari.maharashtra.gov.in/nhm-dashboard/
-  behind nginx Basic Auth.  Login: nhmadmin   Password: nhm2@@6
+  behind nginx Basic Auth.  Login: nhmadmin   (password set by admin on the server — see nginx-dashboard-auth.conf)
   (Generate into /var/www/wari-dashboard/index.html; auth + cron steps in that file.)
 
 WHAT THE NEW FIELDS MEAN
