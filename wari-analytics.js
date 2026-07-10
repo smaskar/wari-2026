@@ -11,7 +11,7 @@
    Fully try/catch'd + fire-and-forget → can NEVER break the app or block offline use. */
 (function () {
   try {
-    var UID = 'wariUid', QUEUE = 'wariHitQueue', VER = '173', locSent = false;
+    var UID = 'wariUid', QUEUE = 'wariHitQueue', VER = '174', locSent = false;
     function store(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
     function put(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
     function uid() {
