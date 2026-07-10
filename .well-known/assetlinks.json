@@ -3,9 +3,9 @@
 		"relation": ["delegate_permission/common.handle_all_urls"],
 		"target": {
 			"namespace": "android_app",
-			"package_name": "in.gov.maharashtra.wari.twa",
+			"package_name": "in.gov.maharashtra.wari.app",
 			"sha256_cert_fingerprints": [
-				"C2:E2:14:29:71:4C:1F:4D:5B:5D:29:0B:0F:00:71:1D:A2:7F:C5:48:CD:3E:FE:38:CA:CE:92:13:EB:3B:50:AE"
+				"06:A1:76:56:26:73:8E:CE:A3:C3:4D:EF:12:CA:49:D6:0A:01:1F:BA:DF:86:31:A7:44:2F:6B:9D:14:90:85:34"
 			]
 		}
 	}
