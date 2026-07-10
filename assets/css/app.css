@@ -167,3 +167,19 @@
 .pdet{color:#34261a;font-size:12px;font-weight:750;margin:8px 0;padding:9px 10px;border-radius:12px;background:#fff;border:1px solid #efe1ca}
 .pcontacts{margin-top:8px}.pctitle{font-size:11px;font-weight:950;color:var(--deep);margin-bottom:5px}.pcalls{display:flex;flex-direction:column;gap:6px}.pcall{display:block;background:#0a7d2c;color:#fff!important;text-decoration:none!important;border-radius:12px;padding:8px 9px;font-size:12px;font-weight:850;line-height:1.25;box-shadow:0 7px 14px #0a7d2c22;overflow-wrap:anywhere}.pcall b{font-weight:950}
 .pact{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}.pbtn{display:flex;align-items:center;justify-content:center;border-radius:12px;padding:10px 8px;text-decoration:none!important;font-size:13px;font-weight:950;background:#fff;color:#25170c!important;border:1px solid #eadfce}.pbtn.call{background:#0a7d2c;color:#fff!important;border-color:#0a7d2c}.pbtn.dirbtn{background:var(--accent);color:#fff!important;border-color:var(--accent)}
+
+/* Clips as collapsible accordion cards (play inline, no jump to Drive) */
+.clip-list{display:flex;flex-direction:column;gap:10px}
+.clip-item{border:1px solid #ead8bc;border-radius:16px;background:#fffef9;box-shadow:0 8px 20px #45281214;overflow:hidden}
+.clip-item[open]{border-color:#f2a45e;box-shadow:0 12px 26px #45281222}
+.clip-sum{list-style:none;display:flex;align-items:center;gap:11px;padding:13px 14px;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.clip-sum::-webkit-details-marker{display:none}
+.clip-ic{width:40px;height:40px;flex:0 0 auto;border-radius:13px;background:linear-gradient(135deg,#f78400,#ef7000);color:#fff;display:grid;place-items:center;font-size:16px;box-shadow:0 6px 14px #8a3f0022}
+.clip-tt{flex:1;min-width:0}
+.clip-tt b{display:block;font-size:14.5px;font-weight:950;line-height:1.25;color:#23160d}
+.clip-tt small{display:block;font-size:11px;font-weight:900;color:#9a3a00;margin-top:2px}
+.clip-chev{flex:0 0 auto;font-size:20px;color:#b98a4e;transition:transform .2s}
+.clip-item[open] .clip-chev{transform:rotate(180deg)}
+.clip-body{padding:0 12px 12px}
+.clip-frame{width:100%;aspect-ratio:16/9;border:0;border-radius:12px;background:#000;display:block}
+.clip-drive{display:inline-block;margin-top:9px;font-size:12px;font-weight:900;color:#2f6fd6;text-decoration:none}
