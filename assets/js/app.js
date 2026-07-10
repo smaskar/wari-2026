@@ -18,7 +18,7 @@ function renderClips(){let el=$('clipStrip'),feat=$('clipFeatured'),clips=(windo
 clips.sort((a,b)=>((/[ऀ-ॿ]/.test(a.title||'')?0:1)-(/[ऀ-ॿ]/.test(b.title||'')?0:1)));
 // Featured stays the captioned आबिटकर video; a YouTube clip leads the collapsible LIST.
 let feats=clips[0];
-let listClips=[{yt:'F5SpMrOF2fY',title:'आरोग्य संपन्न वारी'}].concat(clips);
+let listClips=[{yt:'F5SpMrOF2fY',title:'पंढरपूर वारी : संतांच्या पाऊलखुणा'}].concat(clips);
 let cc=$('clipCount');if(cc)cc.textContent=dev(listClips.length);
 if(feat){let c=feats;feat.innerHTML=`<div class="clip-feature"><div class="clip-feature-head"><span class="clip-ic">▶</span><span class="clip-tt"><b>${W.esc(c.title)}</b>${c.d?`<small class="clip-desig">${W.esc(c.d)}</small>`:''}</span></div><iframe class="clip-frame" src="${W.escAttr(clipPreviewUrl(c))}" allow="autoplay; fullscreen; encrypted-media; picture-in-picture" allowfullscreen loading="lazy" referrerpolicy="strict-origin-when-cross-origin"></iframe></div>`;}
 // Full list (YouTube first, then all clips) inside the collapsible card — hidden until opened
