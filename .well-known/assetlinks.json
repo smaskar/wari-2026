@@ -1,12 +1,12 @@
 [
-  {
-    "relation": ["delegate_permission/common.handle_all_urls"],
-    "target": {
-      "namespace": "android_app",
-      "package_name": "in.gov.maharashtra.wari",
-      "sha256_cert_fingerprints": [
-        "REPLACE_WITH_SHA256_FROM_PLAY_CONSOLE__App_integrity__App_signing_key_certificate"
-      ]
-    }
-  }
+	{
+		"relation": ["delegate_permission/common.handle_all_urls"],
+		"target": {
+			"namespace": "android_app",
+			"package_name": "in.gov.maharashtra.wari.twa",
+			"sha256_cert_fingerprints": [
+				"F4:02:CA:64:05:DB:1B:64:40:C3:08:E8:18:14:60:EB:BE:86:94:6F:B6:E2:8D:C6:65:AB:CE:11:71:B0:36:24"
+			]
+		}
+	}
 ]
